@@ -2,7 +2,7 @@
 layout: post
 title:  PaletteSwap
 category: Shader
-description: 그래픽스 중간 과제
+description: 팔레트 스왑
 ---
 
 <script src="/game/PaletteSwap/TemplateData/UnityProgress.js"></script>
