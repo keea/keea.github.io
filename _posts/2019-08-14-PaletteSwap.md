@@ -8,7 +8,7 @@ description: 그래픽스 중간 과제
 <script src="/game/PaletteSwap/TemplateData/UnityProgress.js"></script>
 <script src="/game/PaletteSwap/Build/UnityLoader.js"></script>
 <script>
-var gameInstance = UnityLoader.instantiate("gameContainer", "/game/PaletteSwap/Build/web.json", {onProgress: UnityProgress});
+var gameInstance = UnityLoader.instantiate("gameContainer", "/game/PaletteSwap/Build/PaletteSwap.json", {onProgress: UnityProgress});
 </script>
 <div class="webgl-content">
 <div id="gameContainer" style="width: 100%; height: 100%"></div>
