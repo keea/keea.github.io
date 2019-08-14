@@ -5,8 +5,8 @@ category: Shader
 description: 그래픽스 중간 과제
 ---
 
-<script src="/game/NoEntry/TemplateData/UnityProgress.js"></script>
-<script src="/game/NoEntry/Build/UnityLoader.js"></script>
+<script src="/game/PaletteSwap/TemplateData/UnityProgress.js"></script>
+<script src="/game/PaletteSwap/Build/UnityLoader.js"></script>
 <script>
 var gameInstance = UnityLoader.instantiate("gameContainer", "/game/PaletteSwap/Build/web.json", {onProgress: UnityProgress});
 </script>
