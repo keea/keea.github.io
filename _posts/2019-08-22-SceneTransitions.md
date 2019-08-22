@@ -5,8 +5,8 @@ category: Shader
 description: 씬 전환 효과
 ---
 
-<script src="/game/PaletteSwap/SceneTransitions/UnityProgress.js"></script>
-<script src="/game/PaletteSwap/Build/UnityLoader.js"></script>
+<script src="/game/SceneTransitions/SceneTransitions/UnityProgress.js"></script>
+<script src="/game/SceneTransitions/Build/UnityLoader.js"></script>
 <script>
 var gameInstance = UnityLoader.instantiate("gameContainer", "/game/SceneTransitions/Build/SceneTransitions.json", {onProgress: UnityProgress});
 </script>
@@ -17,6 +17,7 @@ var gameInstance = UnityLoader.instantiate("gameContainer", "/game/SceneTransiti
 <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
 <div class="title">SceneTransitions 1.0.0</div>
 </div>
+
 
 
 
