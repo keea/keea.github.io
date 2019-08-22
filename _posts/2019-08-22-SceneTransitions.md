@@ -5,7 +5,7 @@ category: Shader
 description: 씬 전환 효과
 ---
 
-<script src="/game/SceneTransitions/SceneTransitions/UnityProgress.js"></script>
+<script src="/game/SceneTransitions/TemplateData/UnityProgress.js"></script>
 <script src="/game/SceneTransitions/Build/UnityLoader.js"></script>
 <script>
 var gameInstance = UnityLoader.instantiate("gameContainer", "/game/SceneTransitions/Build/SceneTransitions.json", {onProgress: UnityProgress});
