@@ -15,7 +15,7 @@ var gameInstance = UnityLoader.instantiate("gameContainer", "/game/SteeringBehav
 <div class="footer">
 <div class="webgl-logo"></div>
 <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
-<div class="title">SteeringBehavior 1.0.0</div>
+<div class="title">SteeringBehavior 1.0.1</div>
 </div>
 
 
