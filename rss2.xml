@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Keea.Dev</title>
+    <link>https://blog.keea.dev/</link>
+    
+    <atom:link href="https://blog.keea.dev/rss2.xml" rel="self" type="application/rss+xml"/>
+    
+    <description>내 마음 끌리는 대로 개발</description>
+    <pubDate>Thu, 01 Feb 2024 07:22:08 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Windows에서 Visual Studio Code로 C++ 개발 환경 설정하기</title>
+      <link>https://blog.keea.dev/2023/11/04/c++-development-visual-studio-code-windows/</link>
+      <guid>https://blog.keea.dev/2023/11/04/c++-development-visual-studio-code-windows/</guid>
+      <pubDate>Sat, 04 Nov 2023 05:04:38 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;주로 macOS에서 개발하는데 하필이면 렌더독이라고 그래픽관련 디버깅 도구가 윈도우에서 작동이 된다고</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/categories/C/">C++</category>
+      
+      
+      <category domain="https://blog.keea.dev/tags/C/">C++</category>
+      
+      <category domain="https://blog.keea.dev/tags/Visual-Studio-Code/">Visual Studio Code</category>
+      
+      <category domain="https://blog.keea.dev/tags/Setting-up-Development-Environment/">Setting up Development Environment</category>
+      
+      <category domain="https://blog.keea.dev/tags/IDE/">IDE</category>
+      
+      <category domain="https://blog.keea.dev/tags/Code-Editor/">Code Editor</category>
+      
+      <category domain="https://blog.keea.dev/tags/Development-Tools/">Development Tools</category>
+      
+      <category domain="https://blog.keea.dev/tags/Windows-OS/">Windows OS</category>
+      
+      <category domain="https://blog.keea.dev/tags/Windows-Development/">Windows Development</category>
+      
+      
+      <comments>https://blog.keea.dev/2023/11/04/c++-development-visual-studio-code-windows/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>GLM 행렬(mat) 또는 벡터(vec) 출력하기</title>
+      <link>https://blog.keea.dev/2023/10/19/Print-a-GLM-mat-or-vec/</link>
+      <guid>https://blog.keea.dev/2023/10/19/Print-a-GLM-mat-or-vec/</guid>
+      <pubDate>Thu, 19 Oct 2023 12:42:42 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;glm의 계산 결과를 확인하기 위해서 출력해야하는 경우가 있다. 이럴 때는</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/categories/Graphics/">Graphics</category>
+      
+      
+      <category domain="https://blog.keea.dev/tags/graphic/">graphic</category>
+      
+      <category domain="https://blog.keea.dev/tags/opengl/">opengl</category>
+      
+      <category domain="https://blog.keea.dev/tags/glm/">glm</category>
+      
+      <category domain="https://blog.keea.dev/tags/math/">math</category>
+      
+      
+      <comments>https://blog.keea.dev/2023/10/19/Print-a-GLM-mat-or-vec/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>디스코드 포럼에 Github 알림 받기</title>
+      <link>https://blog.keea.dev/2023/10/16/Creating-Github-webhook-logs-with-discord-forums/</link>
+      <guid>https://blog.keea.dev/2023/10/16/Creating-Github-webhook-logs-with-discord-forums/</guid>
+      <pubDate>Mon, 16 Oct 2023 11:12:35 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL:DR&quot;&gt;&lt;/a&gt;TL:DR&lt;/h2&gt;&lt;p&gt;디스코드에 포럼 기능이 생겼다. 이제 주제별로 글을 쓰고 스레드를 남길 수 있다. 이전에는 깃허브</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/categories/etc/">etc</category>
+      
+      
+      <category domain="https://blog.keea.dev/tags/github/">github</category>
+      
+      <category domain="https://blog.keea.dev/tags/webhook/">webhook</category>
+      
+      <category domain="https://blog.keea.dev/tags/discord/">discord</category>
+      
+      
+      <comments>https://blog.keea.dev/2023/10/16/Creating-Github-webhook-logs-with-discord-forums/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>나의 WASM 프로젝트 세팅 - embind</title>
+      <link>https://blog.keea.dev/2023/03/25/my-wasm-project-setting-embind/</link>
+      <guid>https://blog.keea.dev/2023/03/25/my-wasm-project-setting-embind/</guid>
+      <pubDate>Sat, 25 Mar 2023 12:11:30 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;2023/02/19/my-wasm-project-setting/&quot;&gt;이전글&lt;/a&gt; 에서</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/tags/wasm/">wasm</category>
+      
+      <category domain="https://blog.keea.dev/tags/emscripten/">emscripten</category>
+      
+      <category domain="https://blog.keea.dev/tags/c/">c++</category>
+      
+      
+      <comments>https://blog.keea.dev/2023/03/25/my-wasm-project-setting-embind/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>나의 WASM 프로젝트 세팅</title>
+      <link>https://blog.keea.dev/2023/02/19/my-wasm-project-setting/</link>
+      <guid>https://blog.keea.dev/2023/02/19/my-wasm-project-setting/</guid>
+      <pubDate>Sun, 19 Feb 2023 01:00:23 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;emscripten은 c++을 이용해서 웹프로그래밍을 할 수 있다는 것이 너무 매력적이다.&lt;br&gt;회사</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/tags/wasm/">wasm</category>
+      
+      <category domain="https://blog.keea.dev/tags/emscripten/">emscripten</category>
+      
+      <category domain="https://blog.keea.dev/tags/c/">c++</category>
+      
+      
+      <comments>https://blog.keea.dev/2023/02/19/my-wasm-project-setting/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>HackMD 글을 Hugo 형태로 변경</title>
+      <link>https://blog.keea.dev/2023/01/27/hackmd-to-hugo/</link>
+      <guid>https://blog.keea.dev/2023/01/27/hackmd-to-hugo/</guid>
+      <pubDate>Fri, 27 Jan 2023 01:46:23 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;HackMD라는 마크다운 에디터를 찾았다. 에디터도 마음에 들지만 깃허브로 푸시하여 문서들을 관리할 수</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/categories/blog/">blog</category>
+      
+      
+      <category domain="https://blog.keea.dev/tags/blog/">blog</category>
+      
+      
+      <comments>https://blog.keea.dev/2023/01/27/hackmd-to-hugo/#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>
