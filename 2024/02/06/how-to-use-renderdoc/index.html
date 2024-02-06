@@ -8,12 +8,12 @@
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Itim|Lobster.css">
-  <meta name="description" content="TL;DROpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다. 설치File -&gt; Launch Ap">
+  <meta name="description" content="TL;DROpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다. 설치https:&#x2F;&#x2F;renderdoc.or">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RenderDoc 사용 방법">
 <meta property="og:url" content="https://blog.keea.dev/2024/02/06/how-to-use-renderdoc/index.html">
 <meta property="og:site_name" content="Keea.Dev">
-<meta property="og:description" content="TL;DROpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다. 설치File -&gt; Launch Ap">
+<meta property="og:description" content="TL;DROpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다. 설치https:&#x2F;&#x2F;renderdoc.or">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image.png">
 <meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-1.png">
@@ -27,14 +27,14 @@
 <meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-8.png">
 <meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-9.png">
 <meta property="article:published_time" content="2024-02-06T11:05:41.000Z">
-<meta property="article:modified_time" content="2024-02-06T12:00:40.293Z">
+<meta property="article:modified_time" content="2024-02-06T12:09:46.555Z">
 <meta property="article:author" content="keea">
 <meta property="article:tag" content="Development Tools">
 <meta property="article:tag" content="RenderDoc">
 <meta property="article:tag" content="Graphics Debugging">
 <meta property="article:tag" content="Rendering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image.png">  <title>RenderDoc 사용 방법 | Keea.Dev</title>    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2024/02/06/how-to-use-renderdoc/"},"headline":"RenderDoc 사용 방법","image":[],"datePublished":"2024-02-06T11:05:41.000Z","dateModified":"2024-02-06T12:00:40.293Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><!-- Google tag (gtag.js) -->
+<meta name="twitter:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image.png">  <title>RenderDoc 사용 방법 | Keea.Dev</title>    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2024/02/06/how-to-use-renderdoc/"},"headline":"RenderDoc 사용 방법","image":[],"datePublished":"2024-02-06T11:05:41.000Z","dateModified":"2024-02-06T12:09:46.555Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-E5BT0W34TG"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -112,7 +112,7 @@
       </li>
     </ul>
     <div class="post-toc-wrap sidebar-panel sidebar-panel-active">
-      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%84%A4%EC%B9%98"><span class="nav-number">2.</span> <span class="nav-text">설치</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Setting"><span class="nav-number">2.1.</span> <span class="nav-text">Program Setting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%94%84%EB%A0%88%EC%9E%84-%EC%BA%A1%EC%B2%98"><span class="nav-number">3.</span> <span class="nav-text">프레임 캡처</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B7%B8%EB%9E%98%ED%94%BD-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B2%80%EC%82%AC"><span class="nav-number">4.</span> <span class="nav-text">그래픽 파이프라인 검사</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%ED%9D%90%EB%A6%84%EB%8F%84"><span class="nav-number">4.1.</span> <span class="nav-text">파이프라인 흐름도</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%B2%84%ED%8D%BC-%EA%B2%80%EC%82%AC"><span class="nav-number">5.</span> <span class="nav-text">버퍼 검사</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%85%8D%EC%8A%A4%EC%B2%98-%EA%B2%80%EC%82%AC"><span class="nav-number">6.</span> <span class="nav-text">텍스처 검사</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%82%AC%EC%9A%A9-%EC%98%88%EC%8B%9C"><span class="nav-number">7.</span> <span class="nav-text">사용 예시</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VertexShader-Input-%EA%B0%92%EA%B3%BC-Output-%EA%B0%92%EC%9D%84-%ED%99%95%EC%9D%B8-Opengl"><span class="nav-number">7.1.</span> <span class="nav-text">VertexShader Input 값과 Output 값을 확인(Opengl)</span></a></li></ol></li></ol></div>
+      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%84%A4%EC%B9%98"><span class="nav-number">2.</span> <span class="nav-text">설치</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Capturing-a-frame"><span class="nav-number">3.</span> <span class="nav-text">Capturing a frame</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Setting"><span class="nav-number">3.1.</span> <span class="nav-text">Program Setting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%94%84%EB%A0%88%EC%9E%84-%EC%BA%A1%EC%B2%98"><span class="nav-number">4.</span> <span class="nav-text">프레임 캡처</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B7%B8%EB%9E%98%ED%94%BD-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B2%80%EC%82%AC"><span class="nav-number">5.</span> <span class="nav-text">그래픽 파이프라인 검사</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%ED%9D%90%EB%A6%84%EB%8F%84"><span class="nav-number">5.1.</span> <span class="nav-text">파이프라인 흐름도</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%B2%84%ED%8D%BC-%EA%B2%80%EC%82%AC"><span class="nav-number">6.</span> <span class="nav-text">버퍼 검사</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%85%8D%EC%8A%A4%EC%B2%98-%EA%B2%80%EC%82%AC"><span class="nav-number">7.</span> <span class="nav-text">텍스처 검사</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%82%AC%EC%9A%A9-%EC%98%88%EC%8B%9C"><span class="nav-number">8.</span> <span class="nav-text">사용 예시</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VertexShader-Input-%EA%B0%92%EA%B3%BC-Output-%EA%B0%92%EC%9D%84-%ED%99%95%EC%9D%B8-Opengl"><span class="nav-number">8.1.</span> <span class="nav-text">VertexShader Input 값과 Output 값을 확인(Opengl)</span></a></li></ol></li></ol></div>
     </div>
     <div class="site-overview-wrap sidebar-panel">
       <div class="site-overview">
@@ -213,7 +213,8 @@
     <div class="post-body">
       
       <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>OpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다.</p>
-<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><p><code>File</code> -&gt; <code>Launch Application</code><br><img src="/images/how-to-use-renderdoc.md/image.png" alt="Alt text"></p>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><p><a target="_blank" rel="noopener" href="https://renderdoc.org/builds">https://renderdoc.org/builds</a> 에서 파일을 다운 받아 설치</p>
+<h2 id="Capturing-a-frame"><a href="#Capturing-a-frame" class="headerlink" title="Capturing a frame"></a>Capturing a frame</h2><p><code>File</code> -&gt; <code>Launch Application</code><br><img src="/images/how-to-use-renderdoc.md/image.png" alt="Alt text"></p>
 <h3 id="Program-Setting"><a href="#Program-Setting" class="headerlink" title="Program Setting"></a><code>Program</code> Setting</h3><ul>
 <li><code>Excutable Path</code>  :  캡쳐할 어플리케이션의 실행 파일 경로를 선택. 캡쳐하려는 프로그램이 어디에 설치되어 있는지 정확히 지정해야한다.</li>
 <li><code>Working Directory</code> : 어플리케이션을 실행할 때 필요한 작업 디렉토리를 설정. 어플리케이션이 관련된 파일을 찾을 수 있도록 정확한 디렉토리를 지정해야 한다.</li>
