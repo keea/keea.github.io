@@ -100,7 +100,7 @@
     
     <div class="site-state-item site-state-posts">
       <a href="/archives/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">posts</span>
       </a>
     </div>
@@ -118,7 +118,7 @@
     
     <div class="site-state-item site-state-tags">
       <a href="/tags/">
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">tags</span>
       </a>
     </div>
@@ -140,6 +140,99 @@
         
         <div id="content" class="content">
           <section>
+  
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
+
+    
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        <a href="/2024/02/06/how-to-use-renderdoc/">RenderDoc 사용 방법</a>
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2024-02-06 20:05:41">2024-02-06</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>OpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다.</p>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><p><code>File</code> -&gt; <code>Launch Application</code><br><img src="/images/how-to-use-renderdoc.md/image.png" alt="Alt text"></p>
+<h3 id="Program-Setting"><a href="#Program-Setting" class="headerlink" title="Program Setting"></a><code>Program</code> Setting</h3><ul>
+<li><code>Excutable Path</code>  :  캡쳐할 어플리케이션의 실행 파일 경로를 선택. 캡쳐하려는 프로그램이 어디에 설치되어 있는지 정확히 지정해야한다.</li>
+<li><code>Working Directory</code> : 어플리케이션을 실행할 때 필요한 작업 디렉토리를 설정. 어플리케이션이 관련된 파일을 찾을 수 있도록 정확한 디렉토리를 지정해야 한다.</li>
+<li><code>Command-line Arguments</code> : 어플리케이션을 실행할 때 필요한 커맨드 라인 인자를 설정.</li>
+</ul>
+<p><code>Launch</code> 버튼으로 실행.</p>
+<h2 id="프레임-캡처"><a href="#프레임-캡처" class="headerlink" title="프레임 캡처"></a>프레임 캡처</h2><p>RenderDoc이 성공적으로 로드외어 프레임을 캡쳐할 준비가 되었음을 나타내기 위한 최소한의 인앱 오버레이가 존재.<br>준비가 되면 <code>F12</code> 또는 <code>PrintScreen</code>를 누르면 다음 프레임이 캡쳐되며 이는 오버레이에 표시되어 프레임이 성공적으로 저장되었음을 알려줌.<br><img src="/images/how-to-use-renderdoc.md/image-1.png" alt="Alt text"><br>어플리케이션이 종료될 때 프레임을 캡처한 경우 자동으로 RenderDoc UI에서 열리기 시작함.</p>
+<h2 id="그래픽-파이프라인-검사"><a href="#그래픽-파이프라인-검사" class="headerlink" title="그래픽 파이프라인 검사"></a>그래픽 파이프라인 검사</h2><p>파이프라인 뷰어는 그래픽 파이프라인의 모든 상태 설정을 보여주며, 바인딩 된 리소스, 래스터라이저 설정 등을 포함한다.<br><code>Window</code> -&gt; <code>Pipeline State</code><br><img src="/images/how-to-use-renderdoc.md/image-2.png" alt="Alt text"></p>
+<h3 id="파이프라인-흐름도"><a href="#파이프라인-흐름도" class="headerlink" title="파이프라인 흐름도"></a>파이프라인 흐름도</h3><p>파이프라인 뷰어 상단에 파이프라인 흐름도가 존재.<br>그래픽 파이프라인의 고수준 블록 레벨 다이어그램을 보여줌.<br><img src="/images/how-to-use-renderdoc.md/image_1706152588023_0.png" alt="Alt text"></p>
+<ul>
+<li>빨간색 : 선택한 블록.</li>
+<li>연한 회색 : 현재 활성화되어 이 작업에 참여하는 부분.</li>
+<li>어두운 회색 : 비활성화되어 패스스루 &#x2F; 아무 동작도 수행하지 않음.</li>
+</ul>
+<h2 id="버퍼-검사"><a href="#버퍼-검사" class="headerlink" title="버퍼 검사"></a>버퍼 검사</h2><p>파이프라인 단계(<code>VTX(Vertex Input)</code>, <code>VS</code>, <code>FS</code>) 에서 버퍼를 확인할 수 있다.<br><img src="/images/how-to-use-renderdoc.md/image-3.png" alt="Alt text"></p>
+<ul>
+<li><code>glDrawElements</code> 이벤트의 <code>VTX (Vertex Input)</code>단계의 버퍼 확인.</li>
+</ul>
+<p>이동 아이콘을 누르면 더 자세한 보기가 가능하다.<br><img src="/images/how-to-use-renderdoc.md/image-4.png" alt="Alt text"></p>
+<ul>
+<li>자세한 보기를 누른 상태.</li>
+<li><code>vertex.aPos</code>의 값을 확인할 수 있다.</li>
+</ul>
+<h2 id="텍스처-검사"><a href="#텍스처-검사" class="headerlink" title="텍스처 검사"></a>텍스처 검사</h2><p>텍스처 뷰어는 어플리케이션에서 텍스처를 검사하고 대상을 렌더링 할 수 있다.<br>다양한 시각화 컨트롤이 있어 여러 채널, 밉 레벨 등을 볼 수 있다.<br><img src="/images/how-to-use-renderdoc.md/image-5.png" alt="Alt text"></p>
+<h2 id="사용-예시"><a href="#사용-예시" class="headerlink" title="사용 예시"></a>사용 예시</h2><h3 id="VertexShader-Input-값과-Output-값을-확인-Opengl"><a href="#VertexShader-Input-값과-Output-값을-확인-Opengl" class="headerlink" title="VertexShader Input 값과 Output 값을 확인(Opengl)"></a>VertexShader Input 값과 Output 값을 확인(Opengl)</h3><ol>
+<li><code>Event Browser</code>에서 <code>glDrawElements</code> 이벤트 선택.</li>
+<li><code>Pipeline State</code>에서 <code>VTX(Vertex Input)</code> 단계 <code>Vertex Attribute Format</code>을 아무거나 <code>Go</code>(초록색 화살표 클릭).<br><img src="/images/how-to-use-renderdoc.md/image-6.png" alt="Alt text"></li>
+<li><code>Mesh Viewer</code> 창이 뜨며 <code>VS Input</code>에서 입력 값과 <code>VS Output</code>에서 버택스 셰이더의 아웃풋 값을 확인할 수 있다.<br><img src="/images/how-to-use-renderdoc.md/image-7.png" alt="Alt text"></li>
+</ol>
+<p>Preview에서 메시를 확인할 수 있다.</p>
+<ul>
+<li><p><code>VS In</code>의 메시.<br><img src="/images/how-to-use-renderdoc.md/image-8.png" alt="Alt text"></p>
+</li>
+<li><p><code>VS Out</code>의 메시.<br><img src="/images/how-to-use-renderdoc.md/image-9.png" alt="Alt text"></p>
+</li>
+</ul>
+      
+    </div>
+
+    
+    
+
+    
+
+    
+  </div>
+</article>
   
   
 
