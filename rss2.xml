@@ -9,8 +9,41 @@
     <atom:link href="https://blog.keea.dev/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>내 마음 끌리는 대로 개발</description>
-    <pubDate>Tue, 06 Feb 2024 12:09:46 GMT</pubDate>
+    <pubDate>Fri, 23 Feb 2024 11:48:10 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>메모리 문제 해결하기</title>
+      <link>https://blog.keea.dev/2024/02/23/management-with-circular-queue/</link>
+      <guid>https://blog.keea.dev/2024/02/23/management-with-circular-queue/</guid>
+      <pubDate>Fri, 23 Feb 2024 10:42:57 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;Web에서 웹캠 프레임 데이터를 받아 처리를 하는 프로그램을 만들고 있다. 근데 시간이 지나면 메모리</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/tags/c/">c++</category>
+      
+      <category domain="https://blog.keea.dev/tags/memory-management/">memory-management</category>
+      
+      <category domain="https://blog.keea.dev/tags/data-processing/">data-processing</category>
+      
+      <category domain="https://blog.keea.dev/tags/queue/">queue</category>
+      
+      <category domain="https://blog.keea.dev/tags/dynamic-memory-allocation/">dynamic-memory-allocation</category>
+      
+      
+      <comments>https://blog.keea.dev/2024/02/23/management-with-circular-queue/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>RenderDoc 사용 방법</title>

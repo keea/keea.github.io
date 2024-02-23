@@ -8,15 +8,24 @@
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Itim|Lobster.css">
-  <meta name="description" content="내 마음 끌리는 대로 개발">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Keea.Dev">
-<meta property="og:url" content="https://blog.keea.dev/tags/C/index.html">
+  <meta name="description" content="TL;DRWeb에서 웹캠 프레임 데이터를 받아 처리를 하는 프로그램을 만들고 있다. 근데 시간이 지나면 메모리 문제가 발생한다. 이를 해결하기 위해 여러 방법을 시도하게 되는데! 현재 상황과 문제점프로세스는 웹캠 프레임 데이터를 처리하기 위해 큐를 활용하고 있다. 그러나 매번 새로운 데이터가 추가될 때마다 메모리를 할당하고 큐에 저장한 후, 데이터를 처리한">
+<meta property="og:type" content="article">
+<meta property="og:title" content="메모리 문제 해결하기">
+<meta property="og:url" content="https://blog.keea.dev/2024/02/23/management-with-circular-queue/index.html">
 <meta property="og:site_name" content="Keea.Dev">
-<meta property="og:description" content="내 마음 끌리는 대로 개발">
+<meta property="og:description" content="TL;DRWeb에서 웹캠 프레임 데이터를 받아 처리를 하는 프로그램을 만들고 있다. 근데 시간이 지나면 메모리 문제가 발생한다. 이를 해결하기 위해 여러 방법을 시도하게 되는데! 현재 상황과 문제점프로세스는 웹캠 프레임 데이터를 처리하기 위해 큐를 활용하고 있다. 그러나 매번 새로운 데이터가 추가될 때마다 메모리를 할당하고 큐에 저장한 후, 데이터를 처리한">
 <meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://blog.keea.dev/images/management-with-circular-queue.md/image.png">
+<meta property="article:published_time" content="2024-02-23T10:42:57.000Z">
+<meta property="article:modified_time" content="2024-02-23T11:48:10.220Z">
 <meta property="article:author" content="keea">
-<meta name="twitter:card" content="summary">  <title>Tag:C++ | Keea.Dev</title>    <!-- Google tag (gtag.js) -->
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="memory-management">
+<meta property="article:tag" content="data-processing">
+<meta property="article:tag" content="queue">
+<meta property="article:tag" content="dynamic-memory-allocation">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.keea.dev/images/management-with-circular-queue.md/image.png">  <title>메모리 문제 해결하기 | Keea.Dev</title>    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2024/02/23/management-with-circular-queue/"},"headline":"메모리 문제 해결하기","image":[],"datePublished":"2024-02-23T10:42:57.000Z","dateModified":"2024-02-23T11:48:10.220Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-E5BT0W34TG"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -85,7 +94,18 @@
 
     
 
-    <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc sidebar-nav-active">
+        Table of Contents
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="post-toc-wrap sidebar-panel sidebar-panel-active">
+      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%98%84%EC%9E%AC-%EC%83%81%ED%99%A9%EA%B3%BC-%EB%AC%B8%EC%A0%9C%EC%A0%90"><span class="nav-number">2.</span> <span class="nav-text">현재 상황과 문제점</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%95%B4%EA%B2%B0-%EB%B0%A9%EC%95%88"><span class="nav-number">3.</span> <span class="nav-text">해결 방안</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%9B%90%ED%98%95-%ED%81%90-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0"><span class="nav-number">4.</span> <span class="nav-text">원형 큐 활용하기</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%9B%90%ED%98%95-%ED%81%90%EC%9D%98-%EC%83%9D%EC%84%B1"><span class="nav-number">4.1.</span> <span class="nav-text">원형 큐의 생성</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%B6%94%EA%B0%80"><span class="nav-number">4.2.</span> <span class="nav-text">데이터 추가</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0-%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0"><span class="nav-number">4.3.</span> <span class="nav-text">데이터 가져오기</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Finish"><span class="nav-number">5.</span> <span class="nav-text">Finish</span></a></li></ol></div>
+    </div>
+    <div class="site-overview-wrap sidebar-panel">
       <div class="site-overview">
   <div class="site-author">
     
@@ -139,34 +159,143 @@
       <main>
         
         <div id="content" class="content">
-          <div class="card post-block tag">
-  <div class="post-collapse">
-    <div class="collection-title">
-      <h1>C++<small>Tag</small></h1>
-    </div>
+          <div>
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
+
     
-    <article class="post-type-normal">
-  <header class="post-collapse-header">
-    <div class="post-collapse-time">
-      <time datetime="{{ moment(post.date).format() }}"
-        content="2023-11-04">
-        11-04
-      </time>
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        메모리 문제 해결하기
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2024-02-23 19:42:57">2024-02-23</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>Web에서 웹캠 프레임 데이터를 받아 처리를 하는 프로그램을 만들고 있다. 근데 시간이 지나면 메모리 문제가 발생한다. 이를 해결하기 위해 여러 방법을 시도하게 되는데!</p>
+<h2 id="현재-상황과-문제점"><a href="#현재-상황과-문제점" class="headerlink" title="현재 상황과 문제점"></a>현재 상황과 문제점</h2><p>프로세스는 웹캠 프레임 데이터를 처리하기 위해 큐를 활용하고 있다. 그러나 매번 새로운 데이터가 추가될 때마다 메모리를 할당하고 큐에 저장한 후, 데이터를 처리한 후에 해당 데이터의 메모리를 해제해야 하는 과정에서 문제가 발생하고 있다. 이 과정에서 메모리 할당이 해제보다 빠르게 진행되어 메모리 사용량이 지나치게 늘어나는 현상이 나타나고 있다. 이로 인해 큐에 저장되는 데이터의 양이 해제되는 데이터의 양보다 많아지는 문제가 발생하고 있다.</p>
+<p><img src="/images/management-with-circular-queue.md/image.png" alt="alt text"></p>
+<p>현재 설정된 최대 메모리 한계는 약 2GB이지만, 실제 데이터가 저장되는 양은 이를 초과한다. 예를 들어, 각 데이터가 800(width) * 600(height) * 4(rgba) 바이트 크기로 저장되고 이러한 데이터가 1729개 저장된다면 전체 메모리 사용량은 3.18GB에 이를 것이다.</p>
+<h2 id="해결-방안"><a href="#해결-방안" class="headerlink" title="해결 방안"></a>해결 방안</h2><p>이 문제를 해결하기 위해 매번 새로운 데이터가 추가될 때마다 메모리를 할당하는 것보다는 미리 몇 개의 메모리를 할당하고 재사용하는 방법을 추천 받았다. 이를 위해 원형 큐를 변형하여 사용하기로 결정했다.</p>
+<p>원형 큐를 선택한 이유는 미리 몇 개의 메모리를 할당하여 재사용할 수 있으며, 큐가 가득 찬 경우 가장 오래된 데이터를 제거하고 새로운 데이터를 추가할 수 있기 때문이다. 이러한 방식은 웹캠 프레임 데이터의 손실이 허용되었기 때문에 가능했다.</p>
+<p>해야할 조치는 다음과 같다.</p>
+<ol>
+<li>매번 데이터를 저장할 때마다 새로운 메모리를 할당하는 것이 아니라, 몇 개의 메모리를 미리 할당하여 재사용해야한다.</li>
+<li>큐에 데이터가 가득 찬 경우, 가장 오래된 데이터를 제거하고 새로운 데이터를 추가해야 한다. 이를 통해 큐의 크기를 일정하게 유지할 수 있다.</li>
+</ol>
+<h2 id="원형-큐-활용하기"><a href="#원형-큐-활용하기" class="headerlink" title="원형 큐 활용하기"></a>원형 큐 활용하기</h2><p>위의 문제를 해결하기 위해 원형 큐를 활용하여 구현했다. </p>
+<h3 id="원형-큐의-생성"><a href="#원형-큐의-생성" class="headerlink" title="원형 큐의 생성"></a>원형 큐의 생성</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">CircularQueue</span>(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> buffer_size) : <span class="hljs-built_in">head_</span>(<span class="hljs-number">0</span>), <span class="hljs-built_in">tail_</span>(<span class="hljs-number">0</span>), <span class="hljs-built_in">size_</span>(<span class="hljs-number">0</span>), <span class="hljs-built_in">buffer_size_</span>(buffer_size) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; MAX_BUFFER_SIZE; i++) &#123;<br>        data_.<span class="hljs-built_in">push_back</span>(<span class="hljs-keyword">new</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>[buffer_size]);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>원하는 버퍼 사이즈만큼 추가하여 원형 큐를 생성한다. 이때, <code>head</code>는 나중에 데이터를 가져올 때의 인덱스를, <code>tail</code>은 데이터를 추가할 위치를 나타낸다.</p>
+<h3 id="데이터-추가"><a href="#데이터-추가" class="headerlink" title="데이터 추가"></a>데이터 추가</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Enqueue</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>* value)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (size_ &lt; MAX_BUFFER_SIZE) &#123;<br>        size_++;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        head_ = (head_ + <span class="hljs-number">1</span>) % MAX_BUFFER_SIZE;<br>    &#125;<br><br>    std::<span class="hljs-built_in">memcpy</span>(data_[tail_], value, buffer_size_);<br>    tail_ = (tail_ + <span class="hljs-number">1</span>) % MAX_BUFFER_SIZE;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>데이터를 추가할 때, 큐의 크기를 넘어서는 경우 가장 오래된 데이터를 제거한 후 새로운 데이터를 추가한다.</p>
+<p>원형 큐의 특성상 가장 오래된 데이터의 위치는 <code>head</code>에 저장되어 있다. 따라서 <code>head</code>를 한칸씩 증가시킴으로써 가장 오래된 데이터를 제거하고 새로운 데이터를 추가할 공간을 만들어 준다.</p>
+<p>새로운 데이터를 큐의 <code>tail</code> 위치에 복사합니다. 이때 std::memcpy 함수를 사용하여 새로운 데이터를 큐에 복사합니다. 그리고 tail_을 한 칸 증가시켜 다음 데이터가 저장될 위치를 나타낸다.</p>
+<p>이렇게 함으로써 큐의 크기를 넘어가는 경우 가장 오래된 데이터를 제거하고 새로운 데이터를 추가할 수 있게된다.</p>
+<h3 id="데이터-가져오기"><a href="#데이터-가져오기" class="headerlink" title="데이터 가져오기"></a>데이터 가져오기</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>* <span class="hljs-title">Dequeue</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (size_ == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;<br>    &#125;<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>* value = data_[head_];<br>    head_ = (head_ + <span class="hljs-number">1</span>) % MAX_BUFFER_SIZE;<br>    size_--;<br>    <span class="hljs-keyword">return</span> value;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>가장 오래된 데이터를 큐에서 가져온다.</p>
+<p>큐가 비어있지 않는 경우 큐에서 가장 오래된 데이터를 가져와야한다. 이를 위해 <code>head</code>가 가리키는 위치에 있는 데이터를 가져와 <code>value</code>에 저장한다. 그리고 <code>head</code>를 한 칸 증가시켜 다음으로 가져올 데이터의 위치를 나타낸다.</p>
+<p>마지막으로, 큐의 크기를 하나 줄여주고 가져온 데이터를 반환한다.</p>
+<p>이를 통해 데이터가 큐의 크기를 넘어가게 되면 가장 오래된 데이터를 지우고 순차적으로 데이터를 배치할 수 있다.</p>
+<h2 id="Finish"><a href="#Finish" class="headerlink" title="Finish"></a>Finish</h2><p>이러한 데이터를 처리하는 작업은 하지 않아서 메모리 문제가 발생했을 때 당황했었다. 다행히 선배들이 방법을 알려줘서 쉽게 해결할 수 있었다. 무지 무지 감사합니다~</p>
+<p>덕분에 메모리가 터치지 않고, 웹에서 웹캠에 새그멘테이션을 적용하고 있다. 좀 더 최적화 해야하고 API도 다듬도 할게 많다!</p>
+      
     </div>
-    <h2 class="post-collapse-title">
-      <a href="/2023/11/04/c++-development-visual-studio-code-windows/">
-        <span>Windows에서 Visual Studio Code로 C++ 개발 환경 설정하기</span>
-      </a>
-    </h2>
-  </header>
-</article>
+
     
-  </div>
+
+
+
+
+
+    
+<div class="post-tags">
+  
+  <a href="/tags/c/" rel="tag"># c++</a>
+  
+  <a href="/tags/memory-management/" rel="tag"># memory-management</a>
+  
+  <a href="/tags/data-processing/" rel="tag"># data-processing</a>
+  
+  <a href="/tags/queue/" rel="tag"># queue</a>
+  
+  <a href="/tags/dynamic-memory-allocation/" rel="tag"># dynamic-memory-allocation</a>
+  
 </div>
 
 
+    
+        
+
+    
+    <footer class="post-footer">
+      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/02/06/how-to-use-renderdoc/" rel="prev" title="RenderDoc 사용 방법">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg>
+      RenderDoc 사용 방법
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>    </footer>
+    
+  </div>
+</article>
+</div>
         </div>
         
+
+
+
+
+<div class="card comment-body  active"><script src="https://giscus.app/client.js"
+  data-repo="keea/keea.github.io"
+  data-repo-id="R_kgDOKd9Xlg"
+  data-category="Comments"
+  data-category-id="DIC_kwDOKd9Xls4CZ-0E"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="ko"
+  crossorigin="anonymous"
+  async>
+</script></div>
+
+
+
       </main>
 
       <footer class="footer">
