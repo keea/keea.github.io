@@ -100,7 +100,7 @@
     
     <div class="site-state-item site-state-posts">
       <a href="/archives/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">posts</span>
       </a>
     </div>
@@ -109,7 +109,7 @@
     
     <div class="site-state-item site-state-categories">
       <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span>
       </a>
     </div>
@@ -118,7 +118,7 @@
     
     <div class="site-state-item site-state-tags">
       <a href="/tags/">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">tags</span>
       </a>
     </div>
@@ -140,6 +140,146 @@
         
         <div id="content" class="content">
           <section>
+  
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
+
+    
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        <a href="/2024/02/28/unreal-engine-attack-animation-work-log/">언리얼 엔진에서의 공격 애니메이션 작업기</a>
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2024-02-28 20:51:37">2024-02-28</time>
+  </span>
+  
+
+  
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="folder" class="svg-inline--fa fa-folder icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">In</span>
+    <span><a href="/categories/%EA%B3%BC%EA%B1%B0%EC%9D%98-%EC%9E%94%EC%9E%AC/" rel="index"><span>과거의 잔재</span></a></span>  </span>
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <div class="note warning"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="exclamation-circle" class="svg-inline--fa fa-exclamation-circle icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"></path></svg><header>Warning</header><p>이 내용은 2019년에 작성된 내용입니다.</p></div>
+<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL:DR"></a>TL:DR</h2><blockquote>
+<p>마우스 클릭 시 공격 애니메이션 재생.</p>
+</blockquote>
+<p>공격 애니메이션을 어떻게 추가할까 고민하다가 애니메이션 스테이트 머신에 적용할려고 했다.<br>하지만 강좌를 찾는 도중에 이 강좌를 찾았다!</p>
+<p><a target="_blank" rel="noopener" href="https://youtu.be/cWWuDf2ZUj0?list=PLCeaAi_Ah78SEV2Q-iVuFbe6xOtQYH6sH">https://youtu.be/cWWuDf2ZUj0?list=PLCeaAi_Ah78SEV2Q-iVuFbe6xOtQYH6sH</a></p>
+<h2 id="몽타주-추가"><a href="#몽타주-추가" class="headerlink" title="몽타주 추가"></a>몽타주 추가</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//melee attack montage</span><br><span class="hljs-built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = <span class="hljs-string">&quot;true&quot;</span>))<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UAnimMontage</span>* MeleeAttackMontage;<br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//몽타주 읽기.</span><br><span class="hljs-function"><span class="hljs-type">static</span> ConstructorHelpers::FObjectFinder&lt;UAnimMontage&gt; <span class="hljs-title">MeleeAttackMontageObject</span><span class="hljs-params">(TEXT(<span class="hljs-string">&quot;AnimMontage&#x27;/Game/Animation/PrimaryAttack_C_Slow_Montage1.PrimaryAttack_C_Slow_Montage1&#x27;&quot;</span>))</span></span>;<br><br><span class="hljs-keyword">if</span> (MeleeAttackMontageObject.<span class="hljs-built_in">Succeeded</span>()) &#123;<br>		MeleeAttackMontage = MeleeAttackMontageObject.Object;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>몽타주는 기존에 있는 것을 팔라곤 에셋인 것을 사용하기로 하고 몽타주는 따로 제작하지 않았다.<br>몽타주를 읽기 위해서 프로젝트 폴더내에 있는 몽타주를 가져와서 읽는데 경로는 해당하는 레퍼런스 복사를 누르면 된다.</p>
+<blockquote>
+<p>20.06 나중에 리소스 삭제할려고 할 때 레퍼런스 참조로 삭제가 힘들게 뜬다. 삭제한다고 하면, 나중에 컴파일 때 엔진이 크래시나는 문제가 있다. 블루프린터로 따로 빼서 리소스를 등록하게 하는 것이 편하다.</p>
+</blockquote>
+<p><img src="/images/unreal-engine-attack-animation-work-log.md/image.png" alt="alt text"></p>
+<h2 id="몽타주-실행-함수"><a href="#몽타주-실행-함수" class="headerlink" title="몽타주 실행 함수"></a>몽타주 실행 함수</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AMyPlayer::AttackStart</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-built_in">PlayAnimMontage</span>(MeleeAttackMontage, <span class="hljs-number">-1.f</span>, <span class="hljs-built_in">FName</span>(<span class="hljs-string">&quot;Default&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>설정해놓은 몽타주 애니메이션을 재생시킨다.</p>
+<h2 id="키-맵핑"><a href="#키-맵핑" class="headerlink" title="키 맵핑"></a>키 맵핑</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++">PlayerInputComponent-&gt;<span class="hljs-built_in">BindAction</span>(<span class="hljs-string">&quot;Attack&quot;</span>, IE_Pressed, <span class="hljs-keyword">this</span>, &amp;AMyPlayer::AttackStart);<br>PlayerInputComponent-&gt;<span class="hljs-built_in">BindAction</span>(<span class="hljs-string">&quot;Attack&quot;</span>, IE_Released, <span class="hljs-keyword">this</span>, &amp;AMyPlayer::AttackEnd);<br></code></pre></td></tr></table></figure>
+<p>마우스 키를 눌렸을 때 만들어준 AttackStart 함수를 호출하고 마우스 키를 뗄 떼는 AttackEnd함수를 호출한다. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AMyPlayer::AttackEnd</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	GEngine-&gt;<span class="hljs-built_in">AddOnScreenDebugMessage</span>(<span class="hljs-number">-1</span>, <span class="hljs-number">5.0f</span>, FColor::Blue, __FUNCTION__);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>AttackEnd는 별 것 없다. 그냥 쉽게 로그를 확인하기 위해서이다.<br><img src="/images/unreal-engine-attack-animation-work-log.md/atk.gif" alt="alt text"><br>뭔가 끝나는 동작이 이상하다. 애니메이션이 검을 내리고 빠르게 원상 복귀가 되는 것이다.</p>
+<p>2019&#x2F;11&#x2F;12</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">- PlayAnimMontage(MeleeAttackMontage, -1.f, FName(&quot;Default&quot;));</span><br><span class="hljs-addition">+ PlayAnimMontage(MeleeAttackMontage, +1.f, FName(&quot;Default&quot;));</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>-1.f가 아니라 1로하면 자연스럽게 애니메이션이 재생된다. 난 바보 같이 -1로 한거나….ㅠㅠ</p>
+</blockquote>
+<h2 id="검에-콜라이더-추가"><a href="#검에-콜라이더-추가" class="headerlink" title="검에 콜라이더 추가."></a>검에 콜라이더 추가.</h2><p>애니메이션이 재생되었다고해도 콜라이더를 붙여서 다른 오브젝트와 충돌 상호작용을 해야한다.</p>
+<p>그래서 박스 콜라이더를 붙여보았다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">UPROPERTY</span>(VisibleAnywhere, BlueprintReadOnly, Category = Attack)<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UBoxComponent</span>* MeleeCollisionBox;<br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++">MeleeCollisionBox = <span class="hljs-built_in">CreateDefaultSubobject</span>&lt;UBoxComponent&gt;(<span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;MeleeCollisionBox&quot;</span>));<br>MeleeCollisionBox-&gt;<span class="hljs-built_in">SetupAttachment</span>(RootComponent);<br>MeleeCollisionBox-&gt;<span class="hljs-built_in">SetCollisionProfileName</span>(<span class="hljs-string">&quot;NoCollision&quot;</span>);<br>MeleeCollisionBox-&gt;<span class="hljs-built_in">SetHiddenInGame</span>(<span class="hljs-literal">false</span>);<br></code></pre></td></tr></table></figure>
+<p>하지만 원하는 것은 검의 움직임에 따라 같이 콜라이더가 움직이는 것인데 그렇지 않다. ㅠㅠ</p>
+<p><a target="_blank" rel="noopener" href="https://youtu.be/IWnSlOmVhTM?list=PLCeaAi_Ah78SEV2Q-iVuFbe6xOtQYH6sH">https://youtu.be/IWnSlOmVhTM?list=PLCeaAi_Ah78SEV2Q-iVuFbe6xOtQYH6sH</a></p>
+<p>하지만 그 다음 강좌에 콜라이더를 붙이는 강좌가 있다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AMyPlayer::BeginPlay</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	Super::<span class="hljs-built_in">BeginPlay</span>();<br>	<span class="hljs-comment">//attach collision components to sockets based on transformation definnate</span><br>	<span class="hljs-function"><span class="hljs-type">const</span> FAttachmentTransformRules <span class="hljs-title">AttackmentRules</span><span class="hljs-params">(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, <span class="hljs-literal">false</span>)</span></span>;<br>	MeleeCollisionBox-&gt;<span class="hljs-built_in">AttachToComponent</span>(<span class="hljs-built_in">GetMesh</span>(), AttackmentRules, <span class="hljs-string">&quot;weapon_r_collison&quot;</span>);<br>	<span class="hljs-built_in">GetCapsuleComponent</span>()-&gt;OnComponentBeginOverlap.<span class="hljs-built_in">AddDynamic</span>(<span class="hljs-keyword">this</span>, &amp;AMyPlayer::OnOverlapBegin);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>부착 규칙을 설정해서 콜라이더를 붙여준다.<br><img src="/images/unreal-engine-attack-animation-work-log.md/image-2.png" alt="alt text"><br>해당 메시의 스켈레톤의 “weapon_r_collision”의 중심점으로 만든 콜라이더가 붙는다.<br><img src="/images/unreal-engine-attack-animation-work-log.md/attack.gif" alt="alt text"><br>콜라이더가 검의 움직임에 맞춰서 동작하는 것을 볼 수 있다!!!!</p>
+<p>상호 작용하는 모습은 다음과 같다.<br><img src="/images/unreal-engine-attack-animation-work-log.md/attack1.gif" alt="alt text"></p>
+<h2 id="콤보-공격-만들기"><a href="#콤보-공격-만들기" class="headerlink" title="콤보 공격 만들기"></a>콤보 공격 만들기</h2><p><img src="/images/unreal-engine-attack-animation-work-log.md/image-3.png" alt="alt text"><br>기획서상에 콤보 공격이 존재한다!!! 앞에서 한 것은 콤보공격을 위한 준비과정일뿐.</p>
+<p><a target="_blank" rel="noopener" href="http://joyeeeeeee.blogspot.com/2017/11/unreal491-combo.html">http://joyeeeeeee.blogspot.com/2017/11/unreal491-combo.html</a></p>
+<p>콤보 공격의 아이디어를 여기서부터 출발했다. 애니메이션 몽타주를 배열로 만든 다음 콤보 수를 배열의 인덱스로 사용하여 재생시키기로 했다!!!!</p>
+<h3 id="몽타주-배열-정의"><a href="#몽타주-배열-정의" class="headerlink" title="몽타주 배열 정의"></a>몽타주 배열 정의</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = <span class="hljs-string">&quot;true&quot;</span>))<br>TArray&lt;UAnimMontage * &gt;MeleeAttackMontages;<br></code></pre></td></tr></table></figure>
+<p>공격 몽타주를 정의해준다. 언리얼에서는 배열을 <code>TArray</code>로 사용한다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">static</span> ConstructorHelpers::FObjectFinder&lt;UAnimMontage&gt; <span class="hljs-title">MeleeAttackMontageObject1</span><span class="hljs-params">(TEXT(<span class="hljs-string">&quot;AnimMontage&#x27;/Game/Animation/PrimaryAttack_A_Slow_Montage1.PrimaryAttack_A_Slow_Montage1&#x27;&quot;</span>))</span></span>;<br><span class="hljs-keyword">if</span> (MeleeAttackMontageObject1.<span class="hljs-built_in">Succeeded</span>()) &#123;<br>	MeleeAttackMontages.<span class="hljs-built_in">Add</span>(MeleeAttackMontageObject1.Object);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> ConstructorHelpers::FObjectFinder&lt;UAnimMontage&gt; <span class="hljs-title">MeleeAttackMontageObject2</span><span class="hljs-params">(TEXT(<span class="hljs-string">&quot;AnimMontage&#x27;/Game/Animation/PrimaryAttack_B_Slow_Montage1.PrimaryAttack_B_Slow_Montage1&#x27;&quot;</span>))</span></span>;<br><span class="hljs-keyword">if</span> (MeleeAttackMontageObject2.<span class="hljs-built_in">Succeeded</span>()) &#123;<br>	MeleeAttackMontages.<span class="hljs-built_in">Add</span>(MeleeAttackMontageObject2.Object);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> ConstructorHelpers::FObjectFinder&lt;UAnimMontage&gt; <span class="hljs-title">MeleeAttackMontageObject3</span><span class="hljs-params">(TEXT(<span class="hljs-string">&quot;AnimMontage&#x27;/Game/Animation/PrimaryAttack_C_Slow_Montage1.PrimaryAttack_C_Slow_Montage1&#x27;&quot;</span>))</span></span>;<br><span class="hljs-keyword">if</span> (MeleeAttackMontageObject3.<span class="hljs-built_in">Succeeded</span>()) &#123;<br>	MeleeAttackMontages.<span class="hljs-built_in">Add</span>(MeleeAttackMontageObject3.Object);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>몽타주들을 배열에 넣어준다. 그러면 인덱스 값에 따라 몽타주들을 관리할 수 있다!</p>
+<p>그 다음 콤보에 대한 설정을 해준다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//콤보상태인가?</span><br><span class="hljs-type">bool</span> m_bCombo;<br><br><span class="hljs-comment">//콤보 공격 인덱스</span><br><span class="hljs-type">int</span> m_iCombo;<br></code></pre></td></tr></table></figure>
+<p>두개의 변수를 만든다. 콤보 상태인가 아닌가를 구분해 줄 bool형 변수와 현재 콤보가 몇 인지 알려주는 변수 2개를 추가했다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AMyPlayer::AttackStart</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">//지금 콤보상태인지 아닌지 확인해본다.</span><br>	<span class="hljs-keyword">if</span> (m_bCombo) &#123;<br>		m_iCombo = (m_iCombo + <span class="hljs-number">1</span>) % <span class="hljs-number">3</span>;<br>	&#125;<br>	<span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-comment">//콤보상태가 아닐경우 combo상태로 변환.</span><br>		m_bCombo = <span class="hljs-literal">true</span>;<br>		m_iCombo = <span class="hljs-number">0</span>;<br>	&#125;<br>	<span class="hljs-built_in">PlayAnimMontage</span>(MeleeAttackMontages[m_iCombo], <span class="hljs-number">1.f</span>, <span class="hljs-built_in">FName</span>(<span class="hljs-string">&quot;Default&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>공격을 했을 때 콤보 상태인지 아닌지를 확인해서 콤보 상태일 경우 콤보를 1증가시키고 아닐 경우에는 콤보 상태로 바꾸고, 콤보를 0으로 초기화시킨다. 그 이후 콤보 애니메이션을 재생시킨다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AMyPlayer::AttackEnd</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	m_bCombo = <span class="hljs-literal">false</span>; <span class="hljs-comment">//콤보를 취소한다.</span><br>	m_iCombo = <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>AttackEnd함수에서 콤보를 취소시킨다.<br><img src="/images/unreal-engine-attack-animation-work-log.md/attack2.gif" alt="alt text"><br>빠르게 첫 번째 애니메이션만 재생이 된다. ㅠㅠ 그 이유를 알아보니 AttackEnd함수는 마우스를 뗄 떼 콤보랑 콤보 상태가 초기화되기 때문이다. 애니메이션이 종료될 때 AttackEnd함수를 호출해야 한다.</p>
+<p>그렇다면 애니메이션이 끝날 때를 판단할 수 있을까?<br><a target="_blank" rel="noopener" href="https://darkcatgame.tistory.com/4">https://darkcatgame.tistory.com/4</a></p>
+<p>이 블로그를 참고하여 인터페이스 함수를 제작하고 그 함수를 호출시키는 Anim Notify 제작 후 연동시켰다.</p>
+<h3 id="Interface-Class-제작"><a href="#Interface-Class-제작" class="headerlink" title="Interface Class 제작"></a>Interface Class 제작</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// Itf_AnimationNotify.h</span><br><br><span class="hljs-comment">//콤보가 취소될 때 호출</span><br><span class="hljs-built_in">UFUNCTION</span>(BlueprintNativeEvent, BlueprintCallable, Category = <span class="hljs-string">&quot;Itf_AnimState&quot;</span>)<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Itf_ResetCombo</span><span class="hljs-params">()</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p>캐릭터 클래스에서 함수 정의를 해준다. 참고로 캐릭터 클래스는 Itf_AnimationNotify를 상속받아야 한다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// MyPlayer.h</span><br><br><span class="hljs-comment">//콤보 리셋 메시지 받기.</span><br><span class="hljs-built_in">UFUNCTION</span>(BlueprintNativeEvent, BlueprintCallable, Category = <span class="hljs-string">&quot;Itf_AnimState&quot;</span>)<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Itf_ResetCombo</span><span class="hljs-params">()</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">Itf_ResetCombo_Implementation</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span></span>;<br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// MyPlayer.cpp</span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AMyPlayer::Itf_ResetCombo_Implementation</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	m_bCombo = <span class="hljs-literal">false</span>; <span class="hljs-comment">//콤보를 취소한다.</span><br>	m_iCombo = <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>인터페이스로 만든 함수가 호출 시 이 함수가 호출 될 것이다. 호출이 되면 애니메이션이 끝나게 되는 상황이기 때문에 콤보를 초기화 해준다.<br>그 다음 애니메이션에서 애니메이션이 끝나는 부분에 Interface함수를 호출해야 한다.</p>
+<p>그렇게 하기 위해서는 AnimNotify를 만들어 준 후 Anim Notify Blueprint 클래스를 제작해야한다.</p>
+<p><img src="/images/unreal-engine-attack-animation-work-log.md/image-4.png" alt="alt text"></p>
+<p>AnimNotify Blueprint 클래스를 제작한다.<br><img src="/images/unreal-engine-attack-animation-work-log.md/image-5.png" alt="alt text"></p>
+<p>Interface함수를 호출하는 노드를 제작한다.<br><img src="/images/unreal-engine-attack-animation-work-log.md/image-6.png" alt="alt text"></p>
+<p>원하는 애니메이션 시점에 만들어준 Notify를 추가하면 된다. 이렇게 해서 끝나는 시점까지 누르지 않으면 콤보가 초기화 되는 조작을 하게 되었다. </p>
+<p>그런데 말입니다….<br><img src="/images/unreal-engine-attack-animation-work-log.md/222.gif" alt="alt text"><br>누르는 속도에 따라 엄청나게 빠르게 칼질하는 플레이어의 모습을 볼 수 있다. </p>
+<p>이렇게 되는 이유는 마우스 클릭할 때마다 AttackStart()의 애니메이션이 재생되기 때문이다. 자연스러운 동작을 보고 싶으면 애니메이션이 끝날 때 콤보가 있을 경우 다음 애니메이션으로 보여주게 하는 것이다.</p>
+<p>그러면 우선 AttackStart부분을 수정해야 한다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// MyPlayer.cpp</span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AMyPlayer::AttackStart</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">//attack이 true 일 때 클릭하면 </span><br>	<span class="hljs-keyword">if</span> (m_bAttack) &#123;<br>		<span class="hljs-comment">//콤보상태를 true한다.</span><br>		m_bCombo = <span class="hljs-literal">true</span>;<br>	&#125;<br>	<span class="hljs-keyword">else</span> &#123;<span class="hljs-comment">//그렇지 않을 경우 </span><br>		<span class="hljs-comment">//m_bAttack 상태를 true 바꾸고, 콤보도 0으로 바꾸고</span><br>		m_bAttack = <span class="hljs-literal">true</span>; m_iCombo = <span class="hljs-number">0</span>;<br><br>		<span class="hljs-comment">//애니메이션을 재생시킨다.</span><br>		GEngine-&gt;<span class="hljs-built_in">AddOnScreenDebugMessage</span>(<span class="hljs-number">-1</span>, <span class="hljs-number">5.0f</span>, FColor::Blue, __FUNCTION__);<br>		<span class="hljs-built_in">PlayAnimMontage</span>(MeleeAttackMontages[m_iCombo], <span class="hljs-number">1.f</span>, <span class="hljs-built_in">FName</span>(<span class="hljs-string">&quot;Default&quot;</span>));<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>m_bAttack</code> 변수를 주어 그것이 <code>true</code>일 때 클릭하는 경우 콤보상태로 바꾸고 그렇지 않을 경우에는 <code>m_bAttack</code> 상태를 <code>true</code>로 바꾼다음 콤보를 0으로 바꿔준다. </p>
+<p>그 이유는 <code>m_bAttack</code> 상태가 <code>false</code>인 경우 현재 공격이 아닌 다른 애니메이션이 재생되었다가 공격을 하는 거라서 첫번째 애니메이션이 재생이 되어야 한다. 그래서 <code>m_iCombo</code>를 <code>0</code>으로 초기화한 것이다. </p>
+<p>이렇게  <code>m_bAttack</code> 상태를 <code>true</code>로 바꿔서 한번 더 누를 경우 <code>m_bAttack</code>이 <code>true</code>이기 때문에 콤보상태가 <code>true</code>로 바꿔진다.</p>
+<p>그 다음 <code>Itf_ResetCombo_Implementation</code>에서 콤보와 애니메이션을 설정 작업을 해준다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// MyPlayer.cpp</span><br><br><span class="hljs-comment">//콤보가 리셋될 때 호출 됨.</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">AMyPlayer::Itf_ResetCombo_Implementation</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	GEngine-&gt;<span class="hljs-built_in">AddOnScreenDebugMessage</span>(<span class="hljs-number">-1</span>, <span class="hljs-number">5.0f</span>, FColor::Red, __FUNCTION__);<br><br>	<span class="hljs-keyword">if</span> (m_bCombo) &#123; <span class="hljs-comment">//콤보 상태일 경우</span><br>		<span class="hljs-comment">//콤보를 1 증가 시킨다.</span><br>		m_iCombo = (m_iCombo + <span class="hljs-number">1</span>) % <span class="hljs-number">3</span>;<br>		<span class="hljs-comment">//다음 애니메이션을 재생시킨다.</span><br>		<span class="hljs-built_in">PlayAnimMontage</span>(MeleeAttackMontages[m_iCombo], <span class="hljs-number">1.f</span>, <span class="hljs-built_in">FName</span>(<span class="hljs-string">&quot;Default&quot;</span>));<br>	&#125;<br>	<span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">//콤보 상태가 아닐 경우</span><br>		m_bAttack = <span class="hljs-literal">false</span>; <span class="hljs-comment">//공격 상태를 false로 한다.</span><br>		m_bCombo = <span class="hljs-literal">false</span>; <span class="hljs-comment">//콤보를 취소한다.</span><br>		m_iCombo = <span class="hljs-number">0</span>; <span class="hljs-comment">//0으로 초기화한다.</span><br>	&#125;<br><br>	m_bCombo = <span class="hljs-literal">false</span>; <span class="hljs-comment">//콤보 상태를 해제 시킨다.</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>그 후 애니메이션이 설정한 시간을 도달하게 되면 함수가 호출된다. 우선 콤보상태일 경우 콤보를 하나 더 증가시킨다.(애니메이션이 종료되기 전에 공격 키를 눌려 콤보를 유지시켰기 때문에) 그 후 증가시킨 인덱스의 애니메이션을 재생시킨다.</p>
+<p>콤보상태가 아닐 경우 설정해둔 변수들을 초기화 시켜준다.(공격이 계속 진행되는 상황이라도 그 공격 애니메이션이 콤보 종료 상태가 들어가기 전에는 한 번 더 조작키를 눌려줘야지 콤보로 인식하기 때문이다.)</p>
+<p>그 후 <code>m_bCombo</code>는 무조건 초기화를 해줘야한다.<br><img src="/images/unreal-engine-attack-animation-work-log.md/333.gif" alt="alt text"></p>
+<p>이렇게 아무리 빨리 눌려도 애니메이션이 끝나야지 다음 애니메이션으로 넘어가게 만들었다. 자연스러운 애니메이션 동작이 확인가능하게 되었다. 짝짝짝-</p>
+<h2 id="여담"><a href="#여담" class="headerlink" title="여담"></a>여담</h2><p>2023.02.29</p>
+<p>오랜만에 옛날 자료를 보다가 잘 정리된 자료를 찾았습니다. 졸업과제 하면서 시행착오도 거치고, 많이 공부했다는 것이 보이네요. 옛날 자료이기는 하지만 누군가가 보고 도움이 되기를 바라면 백업을 해두겠습니다.</p>
+      
+    </div>
+
+    
+    
+
+    
+
+    
+  </div>
+</article>
   
   
 

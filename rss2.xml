@@ -9,8 +9,39 @@
     <atom:link href="https://blog.keea.dev/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>내 마음 끌리는 대로 개발</description>
-    <pubDate>Fri, 23 Feb 2024 11:48:10 GMT</pubDate>
+    <pubDate>Thu, 29 Feb 2024 12:36:19 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>언리얼 엔진에서의 공격 애니메이션 작업기</title>
+      <link>https://blog.keea.dev/2024/02/28/unreal-engine-attack-animation-work-log/</link>
+      <guid>https://blog.keea.dev/2024/02/28/unreal-engine-attack-animation-work-log/</guid>
+      <pubDate>Wed, 28 Feb 2024 11:51:37 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;div class=&quot;note warning&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; data-prefix=&quot;fas&quot; data-icon=&quot;exclamation-circle&quot; class=&quot;svg-inline--fa</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/categories/%EA%B3%BC%EA%B1%B0%EC%9D%98-%EC%9E%94%EC%9E%AC/">과거의 잔재</category>
+      
+      
+      <category domain="https://blog.keea.dev/tags/ue4/">ue4</category>
+      
+      <category domain="https://blog.keea.dev/tags/animation/">animation</category>
+      
+      <category domain="https://blog.keea.dev/tags/game/">game</category>
+      
+      
+      <comments>https://blog.keea.dev/2024/02/28/unreal-engine-attack-animation-work-log/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>메모리 문제 해결하기</title>
