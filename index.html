@@ -113,7 +113,7 @@ if(window.wcs) {
     
     <div class="site-state-item site-state-posts">
       <a href="/archives/">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">posts</span>
       </a>
     </div>
@@ -131,7 +131,7 @@ if(window.wcs) {
     
     <div class="site-state-item site-state-tags">
       <a href="/tags/">
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span>
       </a>
     </div>
@@ -153,6 +153,93 @@ if(window.wcs) {
         
         <div id="content" class="content">
           <section>
+  
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
+
+    
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        <a href="/2024/04/10/github-issue-new-branch-bash-alias/">GitHub Issue를 기반으로 새 브랜치 생성하기 - Alias 활용 방법</a>
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2024-04-10 10:29:31">2024-04-10</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL:DR"></a>TL:DR</h2><p>GitHub 프로젝트에서 작업할 때, issue를 사용하여 작업 항목을 추적하고 관리하기로 마음 먹었다. issue와 연관된 작업을 수행하기 위해 새로운 브랜치를 만들어야 하는데 이 과정을 더욱 편하게 하기 위해 alias를 사용하여 GitHub issue를 기반으로 새로운 브랜치를 만들도록 했다.</p>
+<p><img src="/../images/github-issue-new-branch-bash-alias.md/%E1%84%92%E1%85%AA%E1%84%86%E1%85%A7%E1%86%AB-%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%E1%86%A8-2024-04-10-%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB-10.14.03.gif" alt="alt text"></p>
+<h2 id="필수-설치-사항"><a href="#필수-설치-사항" class="headerlink" title="필수 설치 사항"></a>필수 설치 사항</h2><ul>
+<li>GitHub CLI : GitHub의 기능을 커맨드 라인에서 사용할 수 있도록 도와주는 도구.</li>
+<li>fzf : 터미널에서 상호작용적인 검색을 제공하는 유용한 도구.</li>
+<li>Git</li>
+</ul>
+<h2 id="git-alias-설정"><a href="#git-alias-설정" class="headerlink" title="git alias 설정"></a>git alias 설정</h2><p>먼저, 다음과 같이 <code>.gitconfig</code> 파일에 alias를 정의한다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">[alias]<br>    icb = &quot;!f() &#123; gh issue list | fzf --ansi | awk -F&#x27;\\t&#x27; &#x27;&#123;gsub(\&quot; \&quot;, \&quot;_\&quot;, $3); print $1\&quot;-\&quot;$3&#125;&#x27; | xargs -I &#123;&#125; git checkout -b &#123;&#125;; &#125;; f&quot;<br></code></pre></td></tr></table></figure>
+<p><code>git icb</code> 명령을 실행하면, GitHub issue 목록을 검색하고 선택한 issue를 기반으로 브랜치를 만들 수 있다.</p>
+<h2 id="코드-설명"><a href="#코드-설명" class="headerlink" title="코드 설명"></a>코드 설명</h2><p>이 코드는 다음과 같은 작업을 수행한다.</p>
+<ol>
+<li><p><code>gh issue list</code> 명령을 사용하여 현재 GitHub 프로젝트의 issue 목록을 가져옵니다.</p>
+</li>
+<li><p><code>fzf</code>를 사용하여 사용자에게 issue 목록을 선택하도록 합니다.</p>
+</li>
+<li><p>사용자가 선택한 issue의 번호와 제목을 <code>awk</code>를 사용하여 적절한 형식으로 가공합니다.</p>
+<p> 이 단계에서는 <code>awk</code> 명령을 사용하여 사용자가 선택한 issue의 번호와 제목을 가공한다. <code>-F</code> 옵션을 사용하여 입력 필드 구분자를 설정하고, <code>$1</code>과 <code>$3</code>를 사용하여 선택한 issue의 번호와 제목에 접근했다. 그런 다음, <code>gsub()</code> 함수를 사용하여 제목에서 공백을 밑줄(_)로 대체하여 브랜치 이름으로 사용할 수 있도록 했다. 최종적으로, <code>print</code> 함수를 사용하여 적절한 형식으로 가공된 문자열을 출력하도록 했다.</p>
+</li>
+<li><p>최종적으로 <code>git checkout -b</code> 명령을 사용하여 선택한 issue를 기반으로 새로운 브랜치를 만든다.</p>
+</li>
+</ol>
+<h2 id="여담"><a href="#여담" class="headerlink" title="여담"></a>여담</h2><p>사실 커맨드 라인에 다음과 같은 명령어를 쳐도 된다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">gh issue list | fzf --ansi | awk -F&#x27;\t&#x27; &#x27;&#123;gsub(&quot; &quot;, &quot;_&quot;, $3); print $1&quot;-&quot;$3&#125;&#x27; | xargs -I &#123;&#125; git checkout -b &#123;&#125;<br></code></pre></td></tr></table></figure>
+<p>하지만 이럴 경우 너무 길고, 불편하기 때문에 git alias에 등록하고 했다. git alias를 사용하면 내가 원하는 축약된 이름으로 위의 명령어를 사용할 수 있다고 생각했기 때문이다.</p>
+<p>하지만 git alias에서 이 명령어가 통하지 않았다. ㅠㅠ 여기저기 찾아보고 ai의 도움도 받았다.</p>
+<p>여기서(<a target="_blank" rel="noopener" href="https://johngrib.github.io/wiki/git-alias/#%EC%9D%BC%ED%9A%8C%EC%9A%A9-%ED%95%A8%EC%88%98-%EC%84%A0%EC%96%B8%EC%9C%BC%EB%A1%9C-%EB%B3%B5%EC%9E%A1%ED%95%9C-%EC%85%B8-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0">링크</a>) 함수를 선언 후 사용할 수 있다고 했길래, <code>f()</code>라는 함수로 감싸서 실행시켰다. </p>
+<p>그 다음 문제점은 바로 터미널에서 실행했을 때는 상관없었지만, alias 파일에 등록할 때는 <code>&quot; &quot;</code>로 감싸야했다. 하지만 나는 <code>&quot; &quot;</code>를 사용했기 때문에 꼬이기 시작한 것이다. 이부분에 대해서는 <code>\</code>를 사용하면 해결된다는 것을 알기 때문에 쉽게 해결할 수 있었다. c&#x2F;c++ 코딩하면서 얻은 경험치가 여기서 사용이 되다니! 아무튼 <code>\&quot;</code>가 <code>&quot;</code>가 문자열의 일부라는 것을 알려주는 것이기에 되는 것이다.</p>
+<p>그 외에 다른 명령어들은 chat gpt한테 물어본 후 함수를 알고 그 함수를 이것저것 테스트하면서 내가 원하는 형식으로 만들 수 있게 되었다. 아마 수십번 테스트 한 것이다. 언제 한번 본격적으로 배워야하는데 미루고 있다.</p>
+<p>위에는 살짝 가식은 섞은 것이고, 진짜 이유는 맥북에 모니터를 연결하지 못할 경우, 크롬 켰다, vscode 켰다 하는게 귀찮아서 CLI로 해결하자는 마음이 거대해졌기 때문이다.</p>
+<p>그리고 <code>fzf</code>를 사용해보고, 왠지 모르게 나의 도전욕구를 건드리고 있다. 많은 아이디어를 생각나게 하는 것은 오랜만인걸. 결과도 바로바로 볼 수 있어서 좋다.</p>
+<p>이만 여담은 마치고, 또 재미있거나 유용한 것 만들면 다시 나타날 것이다.</p>
+      
+    </div>
+
+    
+    
+
+    
+
+    
+  </div>
+</article>
   
   
 

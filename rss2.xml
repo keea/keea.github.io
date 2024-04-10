@@ -9,8 +9,37 @@
     <atom:link href="https://blog.keea.dev/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>내 마음 끌리는 대로 개발</description>
-    <pubDate>Thu, 29 Feb 2024 12:36:19 GMT</pubDate>
+    <pubDate>Wed, 10 Apr 2024 02:24:48 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>GitHub Issue를 기반으로 새 브랜치 생성하기 - Alias 활용 방법</title>
+      <link>https://blog.keea.dev/2024/04/10/github-issue-new-branch-bash-alias/</link>
+      <guid>https://blog.keea.dev/2024/04/10/github-issue-new-branch-bash-alias/</guid>
+      <pubDate>Wed, 10 Apr 2024 01:29:31 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL:DR&quot;&gt;&lt;/a&gt;TL:DR&lt;/h2&gt;&lt;p&gt;GitHub 프로젝트에서 작업할 때, issue를 사용하여 작업 항목을 추적하고 관리하기로 마음</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/tags/github/">github</category>
+      
+      <category domain="https://blog.keea.dev/tags/alias/">alias</category>
+      
+      <category domain="https://blog.keea.dev/tags/CLI/">CLI</category>
+      
+      
+      <comments>https://blog.keea.dev/2024/04/10/github-issue-new-branch-bash-alias/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>언리얼 엔진에서의 공격 애니메이션 작업기</title>
