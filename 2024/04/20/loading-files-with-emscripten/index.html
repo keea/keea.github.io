@@ -8,15 +8,20 @@
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Itim|Lobster.css">
-  <meta name="description" content="내 마음 끌리는 대로 개발">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Keea.Dev">
-<meta property="og:url" content="https://blog.keea.dev/archives/2023/11/index.html">
+  <meta name="description" content="TL;DR폴더 안의 파일을 불러와서 사용하고 싶다. Packaging using emcc공식 페이지에서는 컴파일 시 emcc 명령어를 사용하면 된다고 한다. --preload-file 의 명령어를 사용하여 어떤 파일을 사용할지 설정해주면 된다. CMakeList.txt에서 사용하기.1set_target_properties(app LINK_FLAGS &amp;quo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Emscripten에서 사용하여 파일 로딩하기">
+<meta property="og:url" content="https://blog.keea.dev/2024/04/20/loading-files-with-emscripten/index.html">
 <meta property="og:site_name" content="Keea.Dev">
-<meta property="og:description" content="내 마음 끌리는 대로 개발">
+<meta property="og:description" content="TL;DR폴더 안의 파일을 불러와서 사용하고 싶다. Packaging using emcc공식 페이지에서는 컴파일 시 emcc 명령어를 사용하면 된다고 한다. --preload-file 의 명령어를 사용하여 어떤 파일을 사용할지 설정해주면 된다. CMakeList.txt에서 사용하기.1set_target_properties(app LINK_FLAGS &amp;quo">
 <meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2024-04-20T11:39:44.000Z">
+<meta property="article:modified_time" content="2024-04-20T11:47:28.819Z">
 <meta property="article:author" content="keea">
-<meta name="twitter:card" content="summary">  <title>Archive | Keea.Dev</title>    <!-- Naver -->
+<meta property="article:tag" content="wasm">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="Emscripten">
+<meta name="twitter:card" content="summary">  <title>Emscripten에서 사용하여 파일 로딩하기 | Keea.Dev</title>    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2024/04/20/loading-files-with-emscripten/"},"headline":"Emscripten에서 사용하여 파일 로딩하기","image":[],"datePublished":"2024-04-20T11:39:44.000Z","dateModified":"2024-04-20T11:47:28.819Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><!-- Naver -->
 <meta name="naver-site-verification" content="e8b552825571ddb64acddc5ed48fb819a0de57fc" />
 
 <!-- Google tag (gtag.js) -->
@@ -98,7 +103,18 @@ if(window.wcs) {
 
     
 
-    <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc sidebar-nav-active">
+        Table of Contents
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="post-toc-wrap sidebar-panel sidebar-panel-active">
+      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Packaging-using-emcc"><span class="nav-number">2.</span> <span class="nav-text">Packaging using emcc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMakeList-txt%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0"><span class="nav-number">3.</span> <span class="nav-text">CMakeList.txt에서 사용하기.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%8C%8C%EC%9D%BC-%EB%A1%9C%EB%93%9C"><span class="nav-number">4.</span> <span class="nav-text">파일 로드.</span></a></li></ol></div>
+    </div>
+    <div class="site-overview-wrap sidebar-panel">
       <div class="site-overview">
   <div class="site-author">
     
@@ -152,40 +168,120 @@ if(window.wcs) {
       <main>
         
         <div id="content" class="content">
-          <div class="card post-block archive">
-  <div class="post-collapse">
-    <span class="archive-move-on"></span>
-    <span class="archive-page-counter">
-      Nice! 11 posts in total. Keep on posting.
-    </span>
+          <div>
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
 
     
-    <div class="collection-title">
-      <h1 class="archive-year" id="archive-year-2023">2023<h1>
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        Emscripten에서 사용하여 파일 로딩하기
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2024-04-20 20:39:44">2024-04-20</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>폴더 안의 파일을 불러와서 사용하고 싶다.</p>
+<h2 id="Packaging-using-emcc"><a href="#Packaging-using-emcc" class="headerlink" title="Packaging using emcc"></a>Packaging using emcc</h2><p><a target="_blank" rel="noopener" href="https://emscripten.org/docs/porting/files/packaging_files.html">공식 페이지</a>에서는 컴파일 시 emcc 명령어를 사용하면 된다고 한다.</p>
+<p><code>--preload-file</code> 의 명령어를 사용하여 어떤 파일을 사용할지 설정해주면 된다.</p>
+<h2 id="CMakeList-txt에서-사용하기"><a href="#CMakeList-txt에서-사용하기" class="headerlink" title="CMakeList.txt에서 사용하기."></a>CMakeList.txt에서 사용하기.</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">set_target_properties(app LINK_FLAGS &quot;--preload-file $&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/ShaderFiles/EsShader@ShaderFiles&quot;)<br></code></pre></td></tr></table></figure>
+<p><code>@</code>를 통해 가상 파일 위치를 매핑할 수 있다. <code>$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/ShaderFiles/EsShader</code>의 위치를 <code>ShaderFiles</code>로 매핑했다.</p>
+<h2 id="파일-로드"><a href="#파일-로드" class="headerlink" title="파일 로드."></a>파일 로드.</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">├── ShaderFiles<br>│   ├── EsShader<br>│   │   ├── basic_lighting.fs<br>│   │   └── basic_lighting.vs<br>│   ├── basic_lighting.fs<br>│   └── basic_lighting.vs<br></code></pre></td></tr></table></figure>
+<p>파일 트리는 다음과 같다. <code>$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/ShaderFiles/EsShader</code>의 위치를 <code>ShaderFiles</code> 로 매핑했기 때문에 플랫폼에 따라 경로를 변경하지 않아도 된다.</p>
+      
     </div>
+
     
-    <article class="post-type-normal">
-  <header class="post-collapse-header">
-    <div class="post-collapse-time">
-      <time datetime="{{ moment(post.date).format() }}"
-        content="2023-11-04">
-        11-04
-      </time>
-    </div>
-    <h2 class="post-collapse-title">
-      <a href="/2023/11/04/c++-development-visual-studio-code-windows/">
-        <span>Windows에서 Visual Studio Code로 C++ 개발 환경 설정하기</span>
-      </a>
-    </h2>
-  </header>
-</article>
+
+
+
+
+
     
-  </div>
+<div class="post-tags">
+  
+  <a href="/tags/wasm/" rel="tag"># wasm</a>
+  
+  <a href="/tags/c/" rel="tag"># c++</a>
+  
+  <a href="/tags/Emscripten/" rel="tag"># Emscripten</a>
+  
 </div>
 
 
+    
+        
+
+    
+    <footer class="post-footer">
+      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/04/10/github-issue-new-branch-bash-alias/" rel="prev" title="GitHub Issue를 기반으로 새 브랜치 생성하기 - Alias 활용 방법">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg>
+      GitHub Issue를 기반으로...
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>    </footer>
+    
+  </div>
+</article>
+</div>
         </div>
         
+
+
+
+
+<div class="card comment-body  active"><script src="https://giscus.app/client.js"
+  data-repo="keea/keea.github.io"
+  data-repo-id="R_kgDOKd9Xlg"
+  data-category="Comments"
+  data-category-id="DIC_kwDOKd9Xls4CZ-0E"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="ko"
+  crossorigin="anonymous"
+  async>
+</script></div>
+
+
+
       </main>
 
       <footer class="footer">

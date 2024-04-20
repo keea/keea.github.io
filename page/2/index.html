@@ -8,18 +8,15 @@
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Itim|Lobster.css">
-  <meta name="description" content="TL;DRHackMD라는 마크다운 에디터를 찾았다. 에디터도 마음에 들지만 깃허브로 푸시하여 문서들을 관리할 수 있다. 그렇다면 해당 문서들을 정적 블로그의 포스트로 사용하는 것이 좋다고 생각했고 이 부분을 자동화하고자 했다. 그래서 현재 HackMD에서 작성한 문서를 레파지토리에 푸시하면 hugo 포스트 형식으로 변환하여 hugo 홈페이지에 적용했다. d">
-<meta property="og:type" content="article">
-<meta property="og:title" content="HackMD 글을 Hugo 형태로 변경">
-<meta property="og:url" content="https://blog.keea.dev/2023/01/27/hackmd-to-hugo/index.html">
+  <meta name="description" content="내 마음 끌리는 대로 개발">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Keea.Dev">
+<meta property="og:url" content="https://blog.keea.dev/page/2/index.html">
 <meta property="og:site_name" content="Keea.Dev">
-<meta property="og:description" content="TL;DRHackMD라는 마크다운 에디터를 찾았다. 에디터도 마음에 들지만 깃허브로 푸시하여 문서들을 관리할 수 있다. 그렇다면 해당 문서들을 정적 블로그의 포스트로 사용하는 것이 좋다고 생각했고 이 부분을 자동화하고자 했다. 그래서 현재 HackMD에서 작성한 문서를 레파지토리에 푸시하면 hugo 포스트 형식으로 변환하여 hugo 홈페이지에 적용했다. d">
+<meta property="og:description" content="내 마음 끌리는 대로 개발">
 <meta property="og:locale" content="ko_KR">
-<meta property="article:published_time" content="2023-01-27T01:46:23.000Z">
-<meta property="article:modified_time" content="2024-02-01T08:02:41.087Z">
 <meta property="article:author" content="keea">
-<meta property="article:tag" content="blog">
-<meta name="twitter:card" content="summary">  <title>HackMD 글을 Hugo 형태로 변경 | Keea.Dev</title>    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2023/01/27/hackmd-to-hugo/"},"headline":"HackMD 글을 Hugo 형태로 변경","image":[],"datePublished":"2023-01-27T01:46:23.000Z","dateModified":"2024-02-01T08:02:41.087Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><!-- Naver -->
+<meta name="twitter:card" content="summary">  <title>Keea.Dev</title>    <!-- Naver -->
 <meta name="naver-site-verification" content="e8b552825571ddb64acddc5ed48fb819a0de57fc" />
 
 <!-- Google tag (gtag.js) -->
@@ -101,18 +98,7 @@ if(window.wcs) {
 
     
 
-    <ul class="sidebar-nav">
-      <li class="sidebar-nav-toc sidebar-nav-active">
-        Table of Contents
-      </li>
-      <li class="sidebar-nav-overview">
-        Overview
-      </li>
-    </ul>
-    <div class="post-toc-wrap sidebar-panel sidebar-panel-active">
-      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#date-%EC%B6%94%EA%B0%80%ED%95%98%EA%B8%B0"><span class="nav-number">2.</span> <span class="nav-text">date 추가하기</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hugo-%ED%98%95%ED%83%9C%EC%9D%98-%ED%8C%8C%EC%9D%BC-%ED%8A%B8%EB%A6%AC-%EB%A7%8C%EB%93%A4%EA%B8%B0"><span class="nav-number">3.</span> <span class="nav-text">hugo 형태의 파일 트리 만들기</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%B8%8C%EB%9F%B0%EC%B9%98-%EC%9E%91%EC%97%85"><span class="nav-number">3.1.</span> <span class="nav-text">브런치 작업</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%8D%B8%EB%84%A4%EC%9D%BC-%EC%B6%94%EA%B0%80%ED%95%98%EA%B8%B0"><span class="nav-number">4.</span> <span class="nav-text">썸네일 추가하기</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%84%9C%EB%B8%8C%EB%AA%A8%EB%93%88-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8"><span class="nav-number">5.</span> <span class="nav-text">서브모듈 업데이트</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%A7%88%EC%A7%80%EB%A7%89%EC%9C%BC%EB%A1%9C"><span class="nav-number">6.</span> <span class="nav-text">마지막으로..</span></a></li></ol></div>
-    </div>
-    <div class="site-overview-wrap sidebar-panel">
+    <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
       <div class="site-overview">
   <div class="site-author">
     
@@ -166,7 +152,8 @@ if(window.wcs) {
       <main>
         
         <div id="content" class="content">
-          <div>
+          <section>
+  
   
 
 <article class="post post-type-normal">
@@ -179,7 +166,7 @@ if(window.wcs) {
       
       <h1 class="post-title">
         
-        HackMD 글을 Hugo 형태로 변경
+        <a href="/2023/01/27/hackmd-to-hugo/">HackMD 글을 Hugo 형태로 변경</a>
         
       </h1>
       
@@ -291,61 +278,22 @@ if(window.wcs) {
     </div>
 
     
-
-
-
-
+    
 
     
-<div class="post-tags">
-  
-  <a href="/tags/blog/" rel="tag"># blog</a>
-  
-</div>
 
-
-    
-        
-
-    
-    <footer class="post-footer">
-      
-    <div class="post-nav">
-      <div class="post-nav-item"></div>
-      <div class="post-nav-item">
-    <a href="/2023/02/19/my-wasm-project-setting/" rel="next" title="나의 WASM 프로젝트 세팅">
-      나의 WASM 프로젝트 세팅
-      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" class="svg-inline--fa fa-chevron-right icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>
-    </a></div>
-    </div>    </footer>
     
   </div>
 </article>
-</div>
+  
+</section>
+
+
+<nav class="pagination">
+  <a class="extend prev" rel="prev" href="/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-left" class="svg-inline--fa fa-angle-left icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path fill="currentColor" d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path></svg></a><a class="page-number" href="/">1</a><span class="page-number current">2</span></nav>
+
         </div>
         
-
-
-
-
-<div class="card comment-body  active"><script src="https://giscus.app/client.js"
-  data-repo="keea/keea.github.io"
-  data-repo-id="R_kgDOKd9Xlg"
-  data-category="Comments"
-  data-category-id="DIC_kwDOKd9Xls4CZ-0E"
-  data-mapping="pathname"
-  data-strict="0"
-  data-reactions-enabled="1"
-  data-emit-metadata="0"
-  data-input-position="bottom"
-  data-theme="preferred_color_scheme"
-  data-lang="ko"
-  crossorigin="anonymous"
-  async>
-</script></div>
-
-
-
       </main>
 
       <footer class="footer">
