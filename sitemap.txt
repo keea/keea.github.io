@@ -1,3 +1,4 @@
+https://blog.keea.dev/2024/05/16/webassembly-test-suite/
 https://blog.keea.dev/2024/04/20/loading-files-with-emscripten/
 https://blog.keea.dev/2024/04/10/github-issue-new-branch-bash-alias/
 https://blog.keea.dev/2024/02/28/unreal-engine-attack-animation-work-log/
@@ -44,6 +45,9 @@ https://blog.keea.dev/tags/game/
 https://blog.keea.dev/tags/alias/
 https://blog.keea.dev/tags/CLI/
 https://blog.keea.dev/tags/Emscripten/
+https://blog.keea.dev/tags/WebAssembly/
+https://blog.keea.dev/tags/Google-Test/
+https://blog.keea.dev/tags/Test-Suite/
 https://blog.keea.dev/categories/etc/
 https://blog.keea.dev/categories/Graphics/
 https://blog.keea.dev/categories/C/

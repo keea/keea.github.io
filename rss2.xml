@@ -9,8 +9,41 @@
     <atom:link href="https://blog.keea.dev/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>내 마음 끌리는 대로 개발</description>
-    <pubDate>Sat, 20 Apr 2024 11:54:36 GMT</pubDate>
+    <pubDate>Thu, 16 May 2024 11:38:32 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Emscripten에서의 Test Suite</title>
+      <link>https://blog.keea.dev/2024/05/16/webassembly-test-suite/</link>
+      <guid>https://blog.keea.dev/2024/05/16/webassembly-test-suite/</guid>
+      <pubDate>Wed, 15 May 2024 20:34:34 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;TL-DR&quot;&gt;&lt;a href=&quot;#TL-DR&quot; class=&quot;headerlink&quot; title=&quot;TL;DR&quot;&gt;&lt;/a&gt;TL;DR&lt;/h2&gt;&lt;p&gt;요즘 Emscripten으로 WASM 작업하고 있는데 동작하나 확인을 하기 위해서는 c++ 코드</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://blog.keea.dev/tags/C/">C++</category>
+      
+      <category domain="https://blog.keea.dev/tags/Emscripten/">Emscripten</category>
+      
+      <category domain="https://blog.keea.dev/tags/WebAssembly/">WebAssembly</category>
+      
+      <category domain="https://blog.keea.dev/tags/Google-Test/">Google Test</category>
+      
+      <category domain="https://blog.keea.dev/tags/Test-Suite/">Test Suite</category>
+      
+      
+      <comments>https://blog.keea.dev/2024/05/16/webassembly-test-suite/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Emscripten에서 파일 로딩하기</title>

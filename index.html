@@ -113,7 +113,7 @@ if(window.wcs) {
     
     <div class="site-state-item site-state-posts">
       <a href="/archives/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">posts</span>
       </a>
     </div>
@@ -131,7 +131,7 @@ if(window.wcs) {
     
     <div class="site-state-item site-state-tags">
       <a href="/tags/">
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span>
       </a>
     </div>
@@ -153,6 +153,91 @@ if(window.wcs) {
         
         <div id="content" class="content">
           <section>
+  
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
+
+    
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        <a href="/2024/05/16/webassembly-test-suite/">Emscripten에서의 Test Suite</a>
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2024-05-16 05:34:34">2024-05-16</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>요즘 Emscripten으로 WASM 작업하고 있는데 동작하나 확인을 하기 위해서는 c++ 코드 작성하고, 자바스크립트 작성 하고, 브라우저 켜서 콘솔창 확인하기 너무 번거로운 것이다. 이왕하는 것 c++ 코드로만 테스트를 진행하고 싶다. 그래서 이것저것 찾아봐서 Google Test를 적용시켜 보았다.</p>
+<h2 id="전제-조건"><a href="#전제-조건" class="headerlink" title="전제 조건"></a>전제 조건</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">Emscripten SDK</a>가 설치되어 있고 환경 변수가 구성되어 있어야 합니다.</li>
+</ul>
+<h2 id="함수-작성"><a href="#함수-작성" class="headerlink" title="함수 작성"></a>함수 작성</h2><p>테스트를 진행할 함수를 작성했다.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-type">double</span> a, <span class="hljs-type">double</span> b)</span> </span>&#123; <span class="hljs-keyword">return</span> a + b; &#125;<br><br><span class="hljs-built_in">EMSCRIPTEN_BINDINGS</span>(my_module) &#123;<br>  <span class="hljs-built_in">function</span>(<span class="hljs-string">&quot;add&quot;</span>, &amp;add);<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>EMSCRIPTEN_BINDINGS을 사용하여, <code>add</code> 함수가 자바스크립트에서 사용할 수 있게 바인딩 했다. 해당 부분은 <a target="_blank" rel="noopener" href="https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html#">Embind</a>를 확인하면 된다.</p>
+<h2 id="Test-Suite-작성"><a href="#Test-Suite-작성" class="headerlink" title="Test Suite 작성"></a>Test Suite 작성</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;emscripten.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;emscripten/val.h&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> emscripten;<br><br><span class="hljs-built_in">TEST</span>(WebTest, Add) &#123;<br>  val Module = val::<span class="hljs-built_in">global</span>(<span class="hljs-string">&quot;Module&quot;</span>);<br>  <span class="hljs-type">double</span> add_result = Module.<span class="hljs-built_in">call</span>&lt;<span class="hljs-type">double</span>&gt;(<span class="hljs-string">&quot;add&quot;</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>);<br>  <span class="hljs-built_in">EXPECT_DOUBLE_EQ</span>(<span class="hljs-number">1</span> + <span class="hljs-number">2</span>, add_result);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>Add</code> 함수를 테스트하여 덧셈이 올바른지 확인한다. <code>emscripten::val</code>을 사용하여 C++에서 JavaScript 객체를 호출하고 사용할 수 있다.<br>Embind로 바인딩한 <code>add</code> 함수를 호출해서 사용한다.</p>
+<h2 id="CMake-설정"><a href="#CMake-설정" class="headerlink" title="CMake 설정"></a>CMake 설정</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">include(FetchContent)<br>FetchContent_Declare(<br>      googletest<br>      GIT_REPOSITORY https://github.com/google/googletest.git<br>      GIT_TAG v1.14.0<br>)<br><br>FetchContent_MakeAvailable(googletest)<br>include(GoogleTest)<br><br>set(LOPTS &quot;$&#123;LOPTS&#125; -lembind -O3 -std=c++11 -s ASYNCIFY&quot;)<br>set_property(TARGET $&#123;TARGET&#125; PROPERTY SUFFIX &quot;.html&quot;)<br>link_libraries(&quot;-lembind&quot;)<br>target_link_options($&#123;TARGET&#125; PRIVATE &quot;--emrun&quot;)<br>set_target_properties($&#123;TARGET&#125;<br>        PROPERTIES <br>        LINK_FLAGS $&#123;LOPTS&#125;<br>)<br><br>target_link_libraries($&#123;TARGET&#125; PRIVATE gtest_main)<br></code></pre></td></tr></table></figure>
+<p>핵심적인 부분은 <code>FetchContent</code>를 통해 googletest를 설치하고, 사용할 수 있게 하고, emscripten를 위한 링크 플래그를 추가했다.</p>
+<p><code>emrun</code>은 Emscripten으로 생성된 HTML 페이지를 로컬에서 실행하고 디버깅할 수 있게 해주는 도구이다. <code>link_libraries(&quot;-lembind&quot;)</code>를 추가하여 <code>emrun</code> 활성화를 시킨다.<br><code>emrun</code>에 대한 자세한 내용은 <a target="_blank" rel="noopener" href="https://emscripten.org/docs/compiling/Running-html-files-with-emrun.html">여기</a>를 참고하면 된다.</p>
+<h2 id="실행"><a href="#실행" class="headerlink" title="실행"></a>실행</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">emrun --browser chrome --browser_args=&quot;--headless --disable-gpu --remote-debugging-port=9222&quot; --kill_exit [HTML]<br></code></pre></td></tr></table></figure>
+<p>해당 명령어를 사용하면 된다. 옵션의 대한 간단한 설명은 다음과 같다.</p>
+<ul>
+<li><code>--browser chrome</code> : 구글 크롬을 사용하여 실행</li>
+<li><code>--browser_args</code> : 크롬 실행 시 추가적으로 전달할 옵션을 지정.</li>
+<li><code>--kill_exit</code> : HTML 실행 후 emrun이 종료될 때까지 대기하지 않고 즉시 종료.</li>
+</ul>
+<p>실행을 하면 테스트함수가 진행되는 것을 볼 수 있다!</p>
+<iframe src="https://app.warp.dev/block/embed/UIP3Ibrq5WUVZStq5tD1vm" title="gtest" style="width: 100%; height: 100vh; left: 0; top: 0; border:0; overflow:hidden;" allow="clipboard-read; clipboard-write"></iframe>
+
+<h2 id="Finish"><a href="#Finish" class="headerlink" title="Finish"></a>Finish</h2><p><a target="_blank" rel="noopener" href="https://zenn.dev/kounoike/articles/20211129-powerful-wasm-test-env">ぼくがかんがえたさいきょうのWasm(Emscripten&#x2F;C++)テスト環境</a> 해당 블로그에서 작업한 것을 봤길래 나도 냉큼 따라 해봤다. 생각보다 어렵지 않아서 좋은걸! 특히 자바스크립트와 html을 따로 작성안해서 좋다. 나는 웹 개발이 주가 아니라서 어렵단 말이지..</p>
+<p>더 다양한 것을 하려면 복잡하겠지만, 간단한 작업은 이와 같이 하면 된다. 전체 내용은 <a target="_blank" rel="noopener" href="https://gist.github.com/keea/d8555d004ac6345bf0c5c88edc0f5757">gist</a> 올렸으니 확인하면 된다. <code>add</code> 함수 외에 다양한 예시도 있다.</p>
+<h2 id="레퍼런스"><a href="#레퍼런스" class="headerlink" title="레퍼런스"></a>레퍼런스</h2><p>더 자세한 정보를 원하시면 다음 문서를 참고하면 된다.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/index.html">Emscripten 공식 문서</a></li>
+<li><a target="_blank" rel="noopener" href="https://web.dev/articles/embind">Emscripten’s embind</a></li>
+<li><a target="_blank" rel="noopener" href="https://zenn.dev/kounoike/articles/20211129-powerful-wasm-test-env">ぼくがかんがえたさいきょうのWasm(Emscripten&#x2F;C++)テスト環境</a></li>
+</ul>
+      
+    </div>
+
+    
+    
+
+    
+
+    
+  </div>
+</article>
   
   
 
@@ -972,94 +1057,6 @@ if(window.wcs) {
 <p>이제 취향껏 package.json의 scripts에 작성을 추가하면 된다.</p>
 <h2 id="여담"><a href="#여담" class="headerlink" title="여담"></a>여담</h2><p>자바스크립트나 웹 환경을 잘 모르는 초보 개발자가 해냈습니다. 추후에 라이브러리나 SDK로 배포를 하게 된다면 최종적으로 사용자가 쓰는 부분은 깔끔하게 간단하게 쓰이는 것이 좋다고 생각해서 이것저것 조사해보고 시행착오 끝냈다.</p>
 <p>나름 검색해도 정보가 사혼의 조각처럼 흩어졌기 때문에 정리했다!! 이제는 좀 더 작게작게 emscripten의 팁을 올려야겠다.</p>
-      
-    </div>
-
-    
-    
-
-    
-
-    
-  </div>
-</article>
-  
-  
-
-<article class="post post-type-normal">
-  <div class="card post-block">
-
-    
-
-    <header class="post-header">
-
-      
-      <h1 class="post-title">
-        
-        <a href="/2023/02/19/my-wasm-project-setting/">나의 WASM 프로젝트 세팅</a>
-        
-      </h1>
-      
-
-      <div class="post-meta">
-
-  
-  
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
-    </span>
-    <span class="post-meta-item-text">Posted on</span>
-    <time title="Created: 2023-02-19 10:00:23">2023-02-19</time>
-  </span>
-  
-
-  
-
-  
-
-  
-  
-
-</div>
-
-    </header>
-
-    <div class="post-body">
-      
-      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>emscripten은 c++을 이용해서 웹프로그래밍을 할 수 있다는 것이 너무 매력적이다.<br>회사 업무로적이나 개인적으로나 관심이 많아 이것저것 시도해보고 있다. 내가 사용하는 방법을 정리하고자 한다.</p>
-<h2 id="기본적인-방법"><a href="#기본적인-방법" class="headerlink" title="기본적인 방법"></a>기본적인 방법</h2><p><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">emscripten 공식 홈페이지</a>에서 안내하는 방법이다.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">Get the emsdk repo</span><br>git clone https://github.com/emscripten-core/emsdk.git<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Enter that directory</span><br>cd emsdk<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Fetch the latest version of the emsdk (not needed the first time you <span class="hljs-built_in">clone</span>)</span><br>git pull<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Download and install the latest SDK tools.</span><br>./emsdk install latest<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Make the <span class="hljs-string">&quot;latest&quot;</span> SDK <span class="hljs-string">&quot;active&quot;</span> <span class="hljs-keyword">for</span> the current user. (writes .emscripten file)</span><br>./emsdk activate latest<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Activate PATH and other environment variables <span class="hljs-keyword">in</span> the current terminal</span><br>source ./emsdk_env.sh<br></code></pre></td></tr></table></figure>
-<p>git에서 <code>sdk</code>를 설치한 후 원하는 <code>emscripten</code> 버전을 설치. 그 다음 활성화 하는 것이다.</p>
-<p>그 후 빌드를 하면 된다. <code>emcc</code> 명령어에 빌드할 파일을 추가시키면 된다.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./emcc test/hello_world.c -o hello.html<br></code></pre></td></tr></table></figure>
-<p><code>html</code> 파일도 같이 얻고 싶기 위해서 <code>-o</code> 명령어를 사용해 <code>html</code>을 얻는다.<br>자세한 내용은 <a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/Tutorial.html">여기서</a> 확인하면 된다.</p>
-<p>하지만 파일이 하나라면 이 방법이 편한데 만약 프로젝트가 크다면 불편하다. cmake를 이용해 빌드하는 방법을 주로 사용한다.</p>
-<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>나의 프로젝트 구성은 다음과 같다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">.<br>|____cpp<br>| |____CMakeLists.txt<br>| |____src<br>| | |____main.cpp<br>|____web<br></code></pre></td></tr></table></figure>
-<p><code>cpp</code> 폴더에는 c++ 프로젝트에 대한 것을 다 포함 시킨다.<code>web</code> 폴더에는 web에 관한 파일들을 포함 시킬 예정이다.</p>
-<p>CMakeFile 내용은 다음과 같다.</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.0</span>.<span class="hljs-number">0</span>)<br><span class="hljs-keyword">project</span>(EmscriptenProject VERSION <span class="hljs-number">0.1</span>.<span class="hljs-number">0</span>)<br><br><br><span class="hljs-keyword">add_executable</span>(EmscriptenProject src/main.cpp)<br><br><span class="hljs-keyword">if</span>(EMSCRIPTEN)<br><span class="hljs-keyword">set</span>(OUTPUT_DIR <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/../web/src)<br><span class="hljs-keyword">set_target_properties</span>(EmscriptenProject PROPERTIES<br>    RUNTIME_OUTPUT_DIRECTORY <span class="hljs-variable">$&#123;OUTPUT_DIR&#125;</span><br>    SUFFIX <span class="hljs-string">&quot;.html&quot;</span><br>    LINK_FLAGS <span class="hljs-string">&quot;-s WASM=1&quot;</span><br>)<br><br><span class="hljs-keyword">endif</span>()<br></code></pre></td></tr></table></figure>
-<p><code>OUTPUT_DIR</code>에 export할 <code>.wasm</code>, <code>.js</code>, <code>.html</code> 경로를 설정해준다.<br><code>SUFFIX</code>으로 <code>html</code> 파일이 익스포트할 거라고 알리고 <code>LINK_FLAGS</code>에 emscripten 옵션을 추가해주면 된다. <a target="_blank" rel="noopener" href="https://emscripten.org/docs/tools_reference/emcc.html">여기서</a> 확인하고 필요한 옵션을 추가하면 된다.</p>
-<p>해당 <code>main.cpp</code>는 <code>hello world</code>를 출력하는거라서 많은 옵션을 추가하지 않았다.</p>
-<p>빌드 명령어는 다음과 같다.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cmake -S . -B ./.web-build --toolchain ./emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake<br>cmake --build ./.web-build --config Release<br></code></pre></td></tr></table></figure>
-<p><code>CMakeLists.txt</code> 파일이 존재하는 경로에서 실행하면 된다. 여기서 <code>--toolchain</code> 다음 부분에 자신의 emsdk 경로를 추가하면 된다.</p>
-<p>빌드 후 파일 구조는 다음과 같다(기타 파일들을 가렸다).</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">.<br>|____web<br>| |____src<br>| | |____EmscriptenProject.js<br>| | |____EmscriptenProject.wasm<br>| | |____EmscriptenProject.html<br>|____cpp<br>| |____CMakeLists.txt<br>| |____.web-build<br>| |____src<br>| | |____main.cpp<br></code></pre></td></tr></table></figure>
-<p><code>web/scr</code>에 파일이 추가된 것을 확인할 수 있다. html을 바로 클릭하면 실행할 수 없다. XHR 요청을 지원하지 않으면 <code>.wasm</code> 파일을 요청할 수 없기 때문이다. 로컬 웹서버를 사용해야한다. 나는 주로 <code>vscode</code>의 <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer">Live Server</a>를 사용한다.</p>
-<p>html을 실행하면 <code>hello world!</code>가 출력되는 것을 확인할 수 있다.</p>
-<h2 id="쉘-스크립트-작성"><a href="#쉘-스크립트-작성" class="headerlink" title="쉘 스크립트 작성"></a>쉘 스크립트 작성</h2><p>명령어를 일일히 입력하기 귀찮기 때문에 쉘 스크립트를 추가한다. 우선 emscripten을 설치하는 스크립트를 작성했다.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># install_emsdk.sh</span><br><br>DIRECTORY=<span class="hljs-string">&quot;<span class="hljs-subst">$( cd <span class="hljs-string">&quot;<span class="hljs-subst">$( dirname <span class="hljs-string">&quot;<span class="hljs-variable">$0</span>&quot;</span> )</span>&quot;</span> &amp;&amp; pwd -P )</span>&quot;</span><br><br><span class="hljs-built_in">cd</span> <span class="hljs-variable">$&#123;DIRECTORY&#125;</span><br><br><span class="hljs-comment"># Get the emsdk repo</span><br>git <span class="hljs-built_in">clone</span> https://github.com/emscripten-core/emsdk.git<br><br><span class="hljs-comment"># Enter that directory</span><br><span class="hljs-built_in">cd</span> emsdk<br><br><span class="hljs-comment"># Fetch the latest version of the emsdk (not needed the first time you clone)</span><br>git pull<br><br><span class="hljs-comment"># Download and install the latest SDK tools.</span><br>./emsdk install latest<br><br><span class="hljs-comment"># Make the &quot;latest&quot; SDK &quot;active&quot; for the current user. (writes .emscripten file)</span><br>./emsdk activate latest<br></code></pre></td></tr></table></figure>
-<p>최초 1회만 실행하면 된다. 그러면 <code>install_emsdk.sh</code> 가 위치한 곳에 <code>emsdk</code>를 다운받고 설치한다.</p>
-<p>그 다음 빌드 명령어도 스크립트로 만든다.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># build_web.sh</span><br>CURRENT_DIRECTORY=<span class="hljs-string">&quot;<span class="hljs-subst">$( cd <span class="hljs-string">&quot;<span class="hljs-subst">$( dirname <span class="hljs-string">&quot;<span class="hljs-variable">$0</span>&quot;</span> )</span>&quot;</span> &amp;&amp; pwd -P )</span>&quot;</span><br>EMSDK=<span class="hljs-variable">$&#123;CURRENT_DIRECTORY&#125;</span>/emsdk<br><br>cmake -S <span class="hljs-variable">$&#123;CURRENT_DIRECTORY&#125;</span> -B <span class="hljs-variable">$&#123;CURRENT_DIRECTORY&#125;</span>/.web-build --toolchain <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;EMSDK&#125;</span>/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake&quot;</span><br>cmake --build <span class="hljs-variable">$&#123;CURRENT_DIRECTORY&#125;</span>/.web-build --config Release<br></code></pre></td></tr></table></figure>
-<p>쉘 스크립트 실행으로 빌드까지 할 수 있다. 쉘 스크립트 위치는 <code>cpp</code> 폴더에 포함 시켰다.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">.<br>|____web<br>| |____src<br>| | |____EmscriptenProject.js<br>| | |____EmscriptenProject.wasm<br>| | |____EmscriptenProject.html<br>|____cpp<br>| |____CMakeLists.txt<br>| |____build_web.sh<br>| |____install_emsdk.sh<br>| |____.web-build<br>| |____src<br>| | |____main.cpp<br></code></pre></td></tr></table></figure>
-<p>빌드 까지 완료한 파일 구조이다.</p>
-<h2 id="샘플-프로젝트"><a href="#샘플-프로젝트" class="headerlink" title="샘플 프로젝트"></a>샘플 프로젝트</h2><p>저장소를 만들었으니 여기서 확인하면 된다.<br><a target="_blank" rel="noopener" href="https://github.com/keea/sample-emscripten-project-template">https://github.com/keea/sample-emscripten-project-template</a></p>
-<h2 id="여담"><a href="#여담" class="headerlink" title="여담"></a>여담</h2><p>우선 간단한 샘플 만드는 것부터 정리했다. 그 외에 다양한 방법을 연구한 것이 있는데 추후에 문서를 작성하고 여기에 추가하도록 하겠다. 예를 들어 js만 뽑아서 번들링 한다던가… 리엑트와 연동시킨다던가 등등!!</p>
-<p>그리고 샘플 저장소의 README는 ChatGPT가 적어줬다.</p>
       
     </div>
 
