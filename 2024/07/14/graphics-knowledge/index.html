@@ -8,25 +8,20 @@
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Itim|Lobster.css">
-  <meta name="description" content="TL:DR디스코드에 포럼 기능이 생겼다. 이제 주제별로 글을 쓰고 스레드를 남길 수 있다. 이전에는 깃허브 웹후크을 연동할 때 마다 하나의 채팅방에 여러개의 메시지가 섞이거나 여러개의 채팅방을 만들어야 했는데 이제 주제별로 포스트를 생성해 스레드로 남기면 된다!!! 포럼 채널에 웹후크 만들기채널 설정 &gt; 연동 &gt; 웹후크에서 웹후크를 추가한다. 웹">
+  <meta name="description" content="TL:DR왜 중요한 순간에 기억이 나지 않는 것일까?그래픽스 관련 내용을 한 페이지에서 해결 하기 위해 이글을 작성한다. 렌더링 파이프라인3차원으로 만들어진 모델을 2차원 화면에 투영하는 렌더링 과정.  Input Assembler(입력 조립기): 정점 데이터와 인덱스 데이터를 수집하고 이를 조립하여 렌더링 파이프라인에 전달. Vertex Shader(정점">
 <meta property="og:type" content="article">
-<meta property="og:title" content="디스코드 포럼에 Github 알림 받기">
-<meta property="og:url" content="https://blog.keea.dev/2023/10/16/Creating-Github-webhook-logs-with-discord-forums/index.html">
+<meta property="og:title" content="그래픽스 관련 내용 통합 정리">
+<meta property="og:url" content="https://blog.keea.dev/2024/07/14/graphics-knowledge/index.html">
 <meta property="og:site_name" content="Keea.Dev">
-<meta property="og:description" content="TL:DR디스코드에 포럼 기능이 생겼다. 이제 주제별로 글을 쓰고 스레드를 남길 수 있다. 이전에는 깃허브 웹후크을 연동할 때 마다 하나의 채팅방에 여러개의 메시지가 섞이거나 여러개의 채팅방을 만들어야 했는데 이제 주제별로 포스트를 생성해 스레드로 남기면 된다!!! 포럼 채널에 웹후크 만들기채널 설정 &gt; 연동 &gt; 웹후크에서 웹후크를 추가한다. 웹">
+<meta property="og:description" content="TL:DR왜 중요한 순간에 기억이 나지 않는 것일까?그래픽스 관련 내용을 한 페이지에서 해결 하기 위해 이글을 작성한다. 렌더링 파이프라인3차원으로 만들어진 모델을 2차원 화면에 투영하는 렌더링 과정.  Input Assembler(입력 조립기): 정점 데이터와 인덱스 데이터를 수집하고 이를 조립하여 렌더링 파이프라인에 전달. Vertex Shader(정점">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="https://blog.keea.dev/images/image.png">
-<meta property="og:image" content="https://blog.keea.dev/images/image-1.png">
-<meta property="og:image" content="https://blog.keea.dev/images/image-2.png">
-<meta property="og:image" content="https://blog.keea.dev/images/image-3.png">
-<meta property="article:published_time" content="2023-10-16T11:12:35.000Z">
-<meta property="article:modified_time" content="2024-02-01T07:22:08.375Z">
+<meta property="og:image" content="https://blog.keea.dev/images/graphics-knowledge.md/image.png">
+<meta property="og:image" content="https://blog.keea.dev/images/graphics-knowledge.md/image-1.png">
+<meta property="article:published_time" content="2024-07-14T06:47:21.000Z">
+<meta property="article:modified_time" content="2024-07-14T07:56:53.960Z">
 <meta property="article:author" content="keea">
-<meta property="article:tag" content="github">
-<meta property="article:tag" content="webhook">
-<meta property="article:tag" content="discord">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.keea.dev/images/image.png">  <title>디스코드 포럼에 Github 알림 받기 | Keea.Dev</title>    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2023/10/16/Creating-Github-webhook-logs-with-discord-forums/"},"headline":"디스코드 포럼에 Github 알림 받기","image":[],"datePublished":"2023-10-16T11:12:35.000Z","dateModified":"2024-02-01T07:22:08.375Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><!-- Naver -->
+<meta name="twitter:image" content="https://blog.keea.dev/images/graphics-knowledge.md/image.png">  <title>그래픽스 관련 내용 통합 정리 | Keea.Dev</title>    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2024/07/14/graphics-knowledge/"},"headline":"그래픽스 관련 내용 통합 정리","image":[],"datePublished":"2024-07-14T06:47:21.000Z","dateModified":"2024-07-14T07:56:53.960Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><!-- Naver -->
 <meta name="naver-site-verification" content="e8b552825571ddb64acddc5ed48fb819a0de57fc" />
 
 <!-- Google tag (gtag.js) -->
@@ -117,7 +112,7 @@ if(window.wcs) {
       </li>
     </ul>
     <div class="post-toc-wrap sidebar-panel sidebar-panel-active">
-      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL:DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%8F%AC%EB%9F%BC-%EC%B1%84%EB%84%90%EC%97%90-%EC%9B%B9%ED%9B%84%ED%81%AC-%EB%A7%8C%EB%93%A4%EA%B8%B0"><span class="nav-number">2.</span> <span class="nav-text">포럼 채널에 웹후크 만들기</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%8F%AC%EC%8A%A4%ED%8A%B8-%EC%9E%91%EC%84%B1"><span class="nav-number">3.</span> <span class="nav-text">포스트 작성</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Github-repository%EC%97%90-%EC%9B%B9%ED%9B%84%ED%81%AC-%EC%B6%94%EA%B0%80%ED%95%98%EA%B8%B0"><span class="nav-number">4.</span> <span class="nav-text">Github repository에 웹후크 추가하기</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Finish"><span class="nav-number">5.</span> <span class="nav-text">Finish</span></a></li></ol></div>
+      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL:DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%A0%8C%EB%8D%94%EB%A7%81-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8"><span class="nav-number">2.</span> <span class="nav-text">렌더링 파이프라인</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B3%B5%EA%B0%84-%EB%B3%80%ED%99%98-%EC%88%9C%EC%84%9C"><span class="nav-number">2.1.</span> <span class="nav-text">공간 변환 순서</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EC%9B%94%EB%93%9C-%EB%B3%80%ED%99%98"><span class="nav-number">2.1.1.</span> <span class="nav-text">월드 변환</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EB%B7%B0-%EB%B3%80%ED%99%98"><span class="nav-number">2.1.2.</span> <span class="nav-text">뷰 변환</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%ED%88%AC%EC%98%81-%EB%B3%80%ED%99%98"><span class="nav-number">2.1.3.</span> <span class="nav-text">투영 변환</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%8F%99%EC%B0%A8-%EC%A2%8C%ED%91%9C%EA%B3%84"><span class="nav-number">3.</span> <span class="nav-text">동차 좌표계</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3%EC%B0%A8%EC%9B%90-%EB%8F%99%EC%B0%A8-%EC%A2%8C%ED%91%9C%EA%B3%84"><span class="nav-number">3.1.</span> <span class="nav-text">3차원 동차 좌표계.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4x4-%ED%96%89%EB%A0%AC-%EC%82%AC%EC%9A%A9-%EC%9D%B4%EC%9C%A0"><span class="nav-number">3.2.</span> <span class="nav-text">4x4 행렬 사용 이유</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%B2%A1%ED%84%B0-%ED%99%9C%EC%9A%A9"><span class="nav-number">4.</span> <span class="nav-text">벡터 활용</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%91%90-%EB%B2%A1%ED%84%B0-%EC%82%AC%EC%9D%B4%EC%9D%98-%EA%B0%81%EB%8F%84-%EA%B5%AC%ED%95%98%EA%B8%B0"><span class="nav-number">4.1.</span> <span class="nav-text">두 벡터 사이의 각도 구하기</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EB%82%B4%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%91%90-%EB%B2%A1%ED%84%B0%EC%9D%98-%EC%82%AC%EC%9D%B4%EA%B0%81-%EA%B5%AC%ED%95%98%EA%B8%B0-0-180%EB%8F%84"><span class="nav-number">4.1.1.</span> <span class="nav-text">내적으로 두 벡터의 사이각 구하기 (0~180도)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EB%82%B4-%EC%99%B8%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%91%90-%EB%B2%A1%ED%84%B0%EC%9D%98-%EC%82%AC%EC%9D%B4%EA%B0%81-%EA%B5%AC%ED%95%98%EA%B8%B0-0-360%EB%8F%84"><span class="nav-number">4.1.2.</span> <span class="nav-text">내&#x2F;외적으로 두 벡터의 사이각 구하기 (0 ~ 360도)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%A1%9C%EC%BB%AC-%ED%9A%8C%EC%A0%84-%EA%B5%AC%ED%95%98%EB%8A%94-%EB%B2%95"><span class="nav-number">5.</span> <span class="nav-text">로컬 회전 구하는 법.</span></a></li></ol></div>
     </div>
     <div class="site-overview-wrap sidebar-panel">
       <div class="site-overview">
@@ -186,7 +181,7 @@ if(window.wcs) {
       
       <h1 class="post-title">
         
-        디스코드 포럼에 Github 알림 받기
+        그래픽스 관련 내용 통합 정리
         
       </h1>
       
@@ -200,20 +195,12 @@ if(window.wcs) {
       <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
     </span>
     <span class="post-meta-item-text">Posted on</span>
-    <time title="Created: 2023-10-16 20:12:35">2023-10-16</time>
+    <time title="Created: 2024-07-14 15:47:21">2024-07-14</time>
   </span>
   
 
   
 
-  
-  
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="folder" class="svg-inline--fa fa-folder icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"></path></svg>
-    </span>
-    <span class="post-meta-item-text">In</span>
-    <span><a href="/categories/etc/" rel="index"><span>etc</span></a></span>  </span>
   
 
   
@@ -225,25 +212,61 @@ if(window.wcs) {
 
     <div class="post-body">
       
-      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL:DR"></a>TL:DR</h2><p>디스코드에 포럼 기능이 생겼다. 이제 주제별로 글을 쓰고 스레드를 남길 수 있다. 이전에는 깃허브 웹후크을 연동할 때 마다 하나의 채팅방에 여러개의 메시지가 섞이거나 여러개의 채팅방을 만들어야 했는데 이제 주제별로 포스트를 생성해 스레드로 남기면 된다!!!</p>
-<h2 id="포럼-채널에-웹후크-만들기"><a href="#포럼-채널에-웹후크-만들기" class="headerlink" title="포럼 채널에 웹후크 만들기"></a>포럼 채널에 웹후크 만들기</h2><p><code>채널 설정</code> &gt; <code>연동</code> &gt; <code>웹후크</code>에서 웹후크를 추가한다. <code>웹후크 URL 복사</code>를 클릭한다. <code>웹후크 URL</code>은 나중에 사용하기 때문에 따로 저장을 해둔다.<br><img src="/images/image.png" alt="Alt text"></p>
-<h2 id="포스트-작성"><a href="#포스트-작성" class="headerlink" title="포스트 작성"></a>포스트 작성</h2><p>알림을 받을 포스트를 작성한다. 그 후 <code>스레드ID 복사하기</code>를 클릭한다. 이 <code>스레드 ID</code>도 나중에 사용하기에 따로 저장을 해둔다.<br><img src="/images/image-1.png" alt="Alt text"></p>
-<blockquote>
-<p>개발자 모드가 활성화 상태여야 합니다.</p>
-</blockquote>
-<h2 id="Github-repository에-웹후크-추가하기"><a href="#Github-repository에-웹후크-추가하기" class="headerlink" title="Github repository에 웹후크 추가하기"></a>Github repository에 웹후크 추가하기</h2><p>Github의 리포지토리로 이동하여 <code>Setting</code> &gt; <code>Webhooks</code>에서 웹후크를 추가한다.<br><img src="/images/image-2.png" alt="Alt text"></p>
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL:DR"></a>TL:DR</h2><p>왜 중요한 순간에 기억이 나지 않는 것일까?<br>그래픽스 관련 내용을 한 페이지에서 해결 하기 위해 이글을 작성한다.</p>
+<h2 id="렌더링-파이프라인"><a href="#렌더링-파이프라인" class="headerlink" title="렌더링 파이프라인"></a>렌더링 파이프라인</h2><p>3차원으로 만들어진 모델을 2차원 화면에 투영하는 렌더링 과정.</p>
 <ol>
-<li><code>Add webhook</code>를 클릭한다.</li>
-<li>Payload URL에 <code>WEBHOOK_URL/github?thread_id=POST_ID</code>를 입력한다. 이전에 저장한 값을 이용하면 된다.<ul>
-<li><code>WEBHOOK_URL</code> : <code>웹후크 URL</code></li>
-<li><code>POST_ID</code> : <code>스레드 ID</code></li>
+<li><strong>Input Assembler(입력 조립기)</strong>: 정점 데이터와 인덱스 데이터를 수집하고 이를 조립하여 렌더링 파이프라인에 전달.</li>
+<li><strong>Vertex Shader(정점 셰이더)</strong>: 정점 배열에 저장된 모든 정점을 변환하고 다양한 연산을 수행. 주로 공간 변환(모델, 뷰, 투영 변환)과 라이팅 계산을 수행.</li>
+<li><strong>Tessellation(테셀레이션, 선택적)</strong>: 정점을 세밀하게 분할하여 더 많은 폴리곤을 생성, 부드러운 곡면을 표현할 때 사용.<ul>
+<li><strong>Tessellation Control Shader(테셀레이션 제어 셰이더)</strong>: 테셀레이션 레벨 결정.</li>
+<li><strong>Tessellation Evaluation Shader(테셀레이션 평가 셰이더)</strong>: 생성된 새로운 정점의 위치 계산.</li>
 </ul>
 </li>
-<li>콘텐츠 유형으로 <code>application/json</code>을 선택한다.</li>
+<li><strong>Geometry Shader(지오메트리 셰이더, 선택적)</strong>: 기본 도형(주로 삼각형)을 다른 도형으로 변환하거나 새로운 정점을 생성.</li>
+<li><strong>Rasterizer(래스터라이저)</strong>: 변환된 정점들로 삼각형을 조립하고 프래그먼트를 생성.</li>
+<li><strong>Clipping(클리핑)</strong>: 클립 공간의 정점들을 화면 공간으로 투영하기 전에 시야 범위 밖의 정점을 제거.</li>
+<li><strong>Fragment Shader(프래그먼트 셰이더)</strong>: 프래그먼트의 색상을 결정(라이팅, 텍스처링 등 진행).</li>
+<li><strong>Output Merger(출력 병합기)</strong>: 깊이, 스텐실, 블렌딩 테스트를 통해 최종 픽셀 색상을 결정하고 컬러 버퍼를 갱신.</li>
+<li><strong>Viewport Transform(뷰포트 변환)</strong>: 클립 공간에서 정점들을 화면 좌표로 변환.</li>
+<li><strong>Framebuffer(프레임버퍼)</strong>: 최종적으로 렌더링된 이미지가 저장되는 버퍼.</li>
 </ol>
-<p><code>Which events would you like to trigger this webhook?</code> 에서 <code>Just the push event.</code>를 체크했다. 푸시될 때마다 메시지를 보내고 싶기 때문이다.</p>
-<p>완료되면 <code>Add webhook</code> 버튼을 클릭한다.</p>
-<h2 id="Finish"><a href="#Finish" class="headerlink" title="Finish"></a>Finish</h2><p><img src="/images/image-3.png" alt="Alt text"><br>이제 푸시되면 해당 포스트에 메시지가 날라온다!</p>
+<p>정점 셰이더와 프래그먼트 셰이더는 두 가지 프로그램(셰이더 코드)을 작성해야 하며, 래스터라이저와 출력 병합기는 하드웨어로 고정된 단계로 정해진 연산을 수행한다.</p>
+<h3 id="공간-변환-순서"><a href="#공간-변환-순서" class="headerlink" title="공간 변환 순서"></a>공간 변환 순서</h3><p>오브젝트 공간 -(월드 변환)-&gt; 월드 공간 -(뷰 변환)-&gt; 카메라 공간 -(투영 변환)-&gt; 클립 공간.</p>
+<p>정점 셰이더가 수행하는 연산이 위에 적힌 공간 변환들입니다.</p>
+<h4 id="월드-변환"><a href="#월드-변환" class="headerlink" title="월드 변환"></a>월드 변환</h4><p>각 오브젝트 공간에서 만들어진 물체를 단일한 월드 공간으로 변환.</p>
+<h4 id="뷰-변환"><a href="#뷰-변환" class="headerlink" title="뷰 변환"></a>뷰 변환</h4><p>월드 공간의 특정 영역을 스크린에 렌더링하기 위해 가상 카메라의 위치와 방향을 설정.</p>
+<h4 id="투영-변환"><a href="#투영-변환" class="headerlink" title="투영 변환"></a>투영 변환</h4><p>카메라 기준의 정점 위치를 화면에 보이기 위한 정점 위치로 변환.</p>
+<h2 id="동차-좌표계"><a href="#동차-좌표계" class="headerlink" title="동차 좌표계"></a>동차 좌표계</h2><p>기하학적 변환을 보다 편리하게 수행하기 위해 사용되는 확장된 좌표계. 2D나 3D좌표를 고차원으로 확장하여 행렬 연산을 통해 다양한 기하학적 변환(이동, 회전, 스케일링, 원근 투영 등)을 일관되게 수행할 수 있음.</p>
+<h3 id="3차원-동차-좌표계"><a href="#3차원-동차-좌표계" class="headerlink" title="3차원 동차 좌표계."></a>3차원 동차 좌표계.</h3><p>일반적인 3D 좌표 (x, y, z)를 동차 좌표계에서는 (x, y, z, w)로 표현합니다. 이때도 w는 스케일링 팩터로, 일반적으로 1로 설정. 일반 좌표 (x, y, z)는 (x&#x2F;w, y&#x2F;w, z&#x2F;w)로 변환할 수 있다.</p>
+<h3 id="4x4-행렬-사용-이유"><a href="#4x4-행렬-사용-이유" class="headerlink" title="4x4 행렬 사용 이유"></a>4x4 행렬 사용 이유</h3><ol>
+<li>일관된 기하학적 변환:<ul>
+<li>3D 공간에서의 모든 주요 기하학적 변환(이동, 회전, 스케일링, 원근 투영 등)을 하나의 행렬 연산으로 통합 할 수 있다.</li>
+<li>4x4 행렬을 사용하면 모든 변환을 하나의 행렬로 표현할 수 있어, 복잡한 변환을 단순한 행렬 곱셈으로 처리할 수 있다.</li>
+</ul>
+</li>
+<li>변환의 조합:</li>
+</ol>
+<ul>
+<li>여러 변환을 연속적으로 수행할 때, 각각의 변환을 개별적으로 수행하는 대신, 변환 행렬들을 곱해서 하나의 행렬로 결합할 수 있다.</li>
+<li>변환 행렬들의 곱은 순차적인 변환을 하나의 단일 행렬 연산으로 표현할 수 있게 한다.</li>
+</ul>
+<ol start="3">
+<li>동차 좌표계의 표현:<ul>
+<li>동차 좌표계에서의 점 (x, y, z, w)을 4x4 행렬과 곱하여 새로운 점을 얻는다.</li>
+<li>이동 변환은 동차 좌표계에서 다음과 같이 표현:<br>  <img src="/../images/graphics-knowledge.md/image.png" alt="alt text"></li>
+</ul>
+</li>
+<li>원근 투영 변환:<ul>
+<li><p>원근 투영 변환을 효과적으로 수행할 수 있다. 원근 투영 변환은 z-축을 기준으로 거리 비례 축소를 적용한다. 이는 동차 좌표계에서 다음과 같은 4x4 행렬로 표현된다.<br>  <img src="/../images/graphics-knowledge.md/image-1.png" alt="alt text"></p>
+<p>  여기서 <code>d</code>는 원근 투영의 거리이다.</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>동차 좌표계는 3D 기하학적 변환을 단순화하고, 여러 변환을 하나의 연산으로 통합할 수 있게 한다. 4x4 행렬을 사용함으로써, 다양한 변환을 효율적이고 일관되게 수행할 수 있으며, 특히 복잡한 변환을 쉽게 조합하고 적용할 수 있다.</p>
+<h2 id="벡터-활용"><a href="#벡터-활용" class="headerlink" title="벡터 활용"></a>벡터 활용</h2><h3 id="두-벡터-사이의-각도-구하기"><a href="#두-벡터-사이의-각도-구하기" class="headerlink" title="두 벡터 사이의 각도 구하기"></a>두 벡터 사이의 각도 구하기</h3><h4 id="내적으로-두-벡터의-사이각-구하기-0-180도"><a href="#내적으로-두-벡터의-사이각-구하기-0-180도" class="headerlink" title="내적으로 두 벡터의 사이각 구하기 (0~180도)"></a>내적으로 두 벡터의 사이각 구하기 (0~180도)</h4><p>두 벡터의 내적(dot product)을 두 벡터의 크기(magnitude)의 곱으로 나눈 후, 역코사인 함수를 사용하면 두 벡터 사이의 각도를 구할 수 있다.</p>
+<h4 id="내-외적으로-두-벡터의-사이각-구하기-0-360도"><a href="#내-외적으로-두-벡터의-사이각-구하기-0-360도" class="headerlink" title="내&#x2F;외적으로 두 벡터의 사이각 구하기 (0 ~ 360도)"></a>내&#x2F;외적으로 두 벡터의 사이각 구하기 (0 ~ 360도)</h4><p>두 벡터의 내적(dot product)을 두 벡터의 크기(magnitude)의 곱으로 나눈 값을 코사인 값으로 각도를 구하고, 외적(cross product)의 방향을 사용해 각도의 방향을 결정하여 0도에서 360도 사이의 각도를 구할 수 있다.</p>
+<h2 id="로컬-회전-구하는-법"><a href="#로컬-회전-구하는-법" class="headerlink" title="로컬 회전 구하는 법."></a>로컬 회전 구하는 법.</h2><p>[추가 예정]</p>
       
     </div>
 
@@ -254,16 +277,6 @@ if(window.wcs) {
 
 
     
-<div class="post-tags">
-  
-  <a href="/tags/github/" rel="tag"># github</a>
-  
-  <a href="/tags/webhook/" rel="tag"># webhook</a>
-  
-  <a href="/tags/discord/" rel="tag"># discord</a>
-  
-</div>
-
 
     
         
@@ -273,15 +286,11 @@ if(window.wcs) {
       
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/03/25/my-wasm-project-setting-embind/" rel="prev" title="나의 WASM 프로젝트 세팅 - embind">
+    <a href="/2024/05/16/webassembly-test-suite/" rel="prev" title="Emscripten에서의 Test Suite">
       <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg>
-      나의 WASM 프로젝트 세팅 - ...
+      Emscripten에서의 Test...
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/10/19/Print-a-GLM-mat-or-vec/" rel="next" title="GLM 행렬(mat) 또는 벡터(vec) 출력하기">
-      GLM 행렬(mat) 또는 벡터(...
-      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" class="svg-inline--fa fa-chevron-right icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>    </footer>
     
   </div>
