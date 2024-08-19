@@ -1,3 +1,4 @@
+https://blog.keea.dev/2024/08/19/my-first-aftereffect/
 https://blog.keea.dev/2024/07/14/graphics-knowledge/
 https://blog.keea.dev/2024/05/16/webassembly-test-suite/
 https://blog.keea.dev/2024/04/20/loading-files-with-emscripten/
@@ -49,6 +50,7 @@ https://blog.keea.dev/tags/Emscripten/
 https://blog.keea.dev/tags/WebAssembly/
 https://blog.keea.dev/tags/Google-Test/
 https://blog.keea.dev/tags/Test-Suite/
+https://blog.keea.dev/tags/aftereffect/
 https://blog.keea.dev/categories/etc/
 https://blog.keea.dev/categories/Graphics/
 https://blog.keea.dev/categories/C/
