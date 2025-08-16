@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width"/>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Itim|Lobster.css">
+  <meta name="description" content="TL;DR이전글 에서 c++ 코드를 웹에서 실행할 수 있게 되었다. 하지만 이전에는 main함수의 내용을 바로 실행했다면 이번에는 c++ 함수나 클래스를 자바스크립트에서 호출하고자 한다!! embindembind는 c++ 함수나 클래스를 자바스크립트에 바인딩 하는 기술이다. 위에서 말했듯이 c++ 함수나 클래스를 자바스크립트에서 호출 하거나, c++ 객체를">
+<meta property="og:type" content="article">
+<meta property="og:title" content="나의 WASM 프로젝트 세팅 - embind">
+<meta property="og:url" content="https://blog.keea.dev/2023/03/25/my-wasm-project-setting-embind/index.html">
+<meta property="og:site_name" content="Keea.Dev">
+<meta property="og:description" content="TL;DR이전글 에서 c++ 코드를 웹에서 실행할 수 있게 되었다. 하지만 이전에는 main함수의 내용을 바로 실행했다면 이번에는 c++ 함수나 클래스를 자바스크립트에서 호출하고자 한다!! embindembind는 c++ 함수나 클래스를 자바스크립트에 바인딩 하는 기술이다. 위에서 말했듯이 c++ 함수나 클래스를 자바스크립트에서 호출 하거나, c++ 객체를">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-03-25T12:11:30.000Z">
+<meta property="article:modified_time" content="2025-08-16T05:52:22.887Z">
+<meta property="article:author" content="keea">
+<meta property="article:tag" content="emscripten">
+<meta property="article:tag" content="wasm">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">  <title>나의 WASM 프로젝트 세팅 - embind | Keea.Dev</title>    <!-- Naver -->
+<meta name="naver-site-verification" content="e8b552825571ddb64acddc5ed48fb819a0de57fc" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E5BT0W34TG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-E5BT0W34TG');
+</script>
+
+<!-- Naver analytics -->
+<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript">
+if(!wcs_add) var wcs_add = {};
+wcs_add["wa"] = "7c4827c2e26f70";
+if(window.wcs) {
+  wcs_do();
+}
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2023/03/25/my-wasm-project-setting-embind/"},"headline":"나의 WASM 프로젝트 세팅 - embind","image":[],"datePublished":"2023-03-25T12:11:30.000Z","dateModified":"2025-08-16T05:52:22.887Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><link rel="stylesheet" type="text/css" href="/css/injector/main.css" /><link rel="preload" as="style" href="/css/injector/light.css" /><link rel="preload" as="style" href="/css/injector/dark.css" /><link rel="preload" as="style" href="/css/injector/auto.css" /><meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/rss2.xml" title="Keea.Dev" type="application/rss+xml">
+</head>
+
+<body>
+
+    
+  <header class="main-header">
+    <div class="header-inner card"><div class="brand">
+  <div class="site-meta">
+    <div class="custom-logo-site-title">
+      <a href="/">
+        <span class="site-title">Keea.Dev</span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg>    </button>
+  </div>
+</div>
+<nav class="site-nav">
+  <ul class="menu">
+    <li class="menu-item menu-item-home"><a href="/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="home" class="svg-inline--fa fa-home icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path></svg>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" class="svg-inline--fa fa-tags icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path></svg>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="th" class="svg-inline--fa fa-th icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path></svg>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="archive" class="svg-inline--fa fa-archive icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"></path></svg>Archives</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>Search</a></li>  </ul>
+</nav>
+</div>
+  </header>
+
+  <div class="flex-container">
+
+    
+
+<aside class="sidebar">
+
+  <div class="header-inner card">
+    <div class="brand">
+  <div class="site-meta">
+    <div class="custom-logo-site-title">
+      <a href="/">
+        <span class="site-title">Keea.Dev</span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg>    </button>
+  </div>
+</div>
+<nav class="site-nav">
+  <ul class="menu">
+    <li class="menu-item menu-item-home"><a href="/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="home" class="svg-inline--fa fa-home icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path></svg>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" class="svg-inline--fa fa-tags icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path></svg>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="th" class="svg-inline--fa fa-th icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path></svg>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="archive" class="svg-inline--fa fa-archive icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"></path></svg>Archives</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>Search</a></li>  </ul>
+</nav>
+  </div>
+
+  <div class="sidebar-inner card">
+
+    
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc sidebar-nav-active">
+        Table of Contents
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="post-toc-wrap sidebar-panel sidebar-panel-active">
+      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#embind"><span class="nav-number">2.</span> <span class="nav-text">embind</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#embind-%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95"><span class="nav-number">3.</span> <span class="nav-text">embind 사용 방법</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%B2%88%EB%93%A4%EB%A7%81"><span class="nav-number">4.</span> <span class="nav-text">번들링</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rollup"><span class="nav-number">4.1.</span> <span class="nav-text">Rollup</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install"><span class="nav-number">5.</span> <span class="nav-text">Install</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Setting"><span class="nav-number">6.</span> <span class="nav-text">Setting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%9E%91%EC%97%85"><span class="nav-number">7.</span> <span class="nav-text">스크립트 작업</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%97%AC%EB%8B%B4"><span class="nav-number">8.</span> <span class="nav-text">여담</span></a></li></ol></div>
+    </div>
+    <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview">
+  <div class="site-author">
+    
+    <img class="site-author-image" src="/images/avatar.jpeg"
+      alt="keea" />
+    
+    <p class="site-author-name">keea</p>
+    <div class="site-description">내 마음 끌리는 대로 개발</div>
+  </div>
+
+  <nav class="site-state">
+    
+    <div class="site-state-item site-state-posts">
+      <a href="/archives/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">posts</span>
+      </a>
+    </div>
+    
+
+    
+    <div class="site-state-item site-state-categories">
+      <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span>
+      </a>
+    </div>
+    
+
+    
+    <div class="site-state-item site-state-tags">
+      <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">tags</span>
+      </a>
+    </div>
+    
+  </nav>
+
+  <div class="social-links"><a href="/rss2.xml" title="/rss2.xml" rel="noopener" target="_blank"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="rss" class="svg-inline--fa fa-rss icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M128.081 415.959c0 35.369-28.672 64.041-64.041 64.041S0 451.328 0 415.959s28.672-64.041 64.041-64.041 64.04 28.673 64.04 64.041zm175.66 47.25c-8.354-154.6-132.185-278.587-286.95-286.95C7.656 175.765 0 183.105 0 192.253v48.069c0 8.415 6.49 15.472 14.887 16.018 111.832 7.284 201.473 96.702 208.772 208.772.547 8.397 7.604 14.887 16.018 14.887h48.069c9.149.001 16.489-7.655 15.995-16.79zm144.249.288C439.596 229.677 251.465 40.445 16.503 32.01 7.473 31.686 0 38.981 0 48.016v48.068c0 8.625 6.835 15.645 15.453 15.999 191.179 7.839 344.627 161.316 352.465 352.465.353 8.618 7.373 15.453 15.999 15.453h48.068c9.034-.001 16.329-7.474 16.005-16.504z"></path></svg></a><a href="https://github.com/keea" title="https://github.com/keea" rel="noopener" target="_blank"><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" class="svg-inline--fa fa-github icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></a></div>
+</div>
+    </div>
+
+    
+
+  </div>
+</aside>
+
+    <div class="flex-main">
+
+      <main>
+        
+        <div id="content" class="content">
+          <div>
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
+
+    
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        나의 WASM 프로젝트 세팅 - embind
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2023-03-25 21:11:30">2023-03-25</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p><a href="2023/02/19/my-wasm-project-setting/">이전글</a> 에서 c++ 코드를 웹에서 실행할 수 있게 되었다. 하지만 이전에는 main함수의 내용을 바로 실행했다면 이번에는 c++ 함수나 클래스를 자바스크립트에서 호출하고자 한다!!</p>
+<h2 id="embind"><a href="#embind" class="headerlink" title="embind"></a>embind</h2><p>embind는 c++ 함수나 클래스를 자바스크립트에 바인딩 하는 기술이다. 위에서 말했듯이 c++ 함수나 클래스를 자바스크립트에서 호출 하거나, c++ 객체를 생성할 수 있다.</p>
+<h2 id="embind-사용-방법"><a href="#embind-사용-방법" class="headerlink" title="embind 사용 방법"></a>embind 사용 방법</h2><p><code>EMSCRIPTEN_BINDINGS</code> 매크로를 사용하여 C++ 코드에서 바인딩 할 클래스 및 함수를 정의하면 된다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;emscripten/bind.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">Add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> </span>&#123;<br>  <span class="hljs-keyword">return</span> a + b;<br>&#125;<br><br><span class="hljs-built_in">EMSCRIPTEN_BINDINGS</span>(add_binding) &#123;<br>  emscripten::<span class="hljs-built_in">function</span>(<span class="hljs-string">&quot;Add&quot;</span>, &amp;Add);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>int Add(int, int)</code> 함수를 자바스크립트에서 노출할 수 있도록 했다.</p>
+<p>해당 코드를 <code>lembind</code> 옵션을 사용하여 컴파일 하면 된다.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">emcc -lembind -o add.js add.cpp<br></code></pre></td></tr></table></figure>
+
+<p>웹에서는 다음과 같이 사용하면 된다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">var</span> <span class="hljs-title class_">Module</span> = &#123;</span><br><span class="language-javascript">      <span class="hljs-attr">onRuntimeInitialized</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;lerp result: &#x27;</span> + <span class="hljs-title class_">Module</span>.<span class="hljs-title function_">add</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>));</span><br><span class="language-javascript">      &#125;</span><br><span class="language-javascript">    &#125;;</span><br><span class="language-javascript">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;add.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+<p><code>onRuntimeInitialized</code>를 사용하여 런타임이 준비되었을 때 코드를 실행한다.</p>
+<h2 id="번들링"><a href="#번들링" class="headerlink" title="번들링"></a>번들링</h2><p>물론 c++로 뽑아낸 자바스크립트만 사용하는 경우도 있지만 다른 자바스크립트들과 사용할 경우 묶어서 사용하는 번들링 기술을 사용하는 것도 좋다고 생각해서 번들링을 설정했다.</p>
+<h3 id="Rollup"><a href="#Rollup" class="headerlink" title="Rollup"></a>Rollup</h3><p>여러가지 번들링 도구 중 Rollup을 사용한 큰 이유는 없다. 그냥 내가 보기에 간단해 보이고 성공했기 때문이다. </p>
+<h2 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h2><p>필요한 플러그인을 다운받았다.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">npm install -D rollup @rollup/plugin-commonjs @rollup/plugin-node-resolve rollup-plugin-polyfill-node<br></code></pre></td></tr></table></figure>
+<ul>
+<li>@rollup&#x2F;plugin-commonjs : CommonJS 모듈 형식으로 작성된 코드를 ES 모듈 형식으로 변환한다.</li>
+<li>@rollup&#x2F;plugin-node-resolve : 외부 모듈(node_modules) 사용 시 사용한다.</li>
+<li>rollup-plugin-polyfill-node : Node.js 환경에서 사용 가능한 전역 객체나 함수를 브라우저에서 사용할 수 있도록 polyfill을 제공한다.</li>
+</ul>
+<p>이러한 용도로 해당 플러그인을 설정했다.</p>
+<h2 id="Setting"><a href="#Setting" class="headerlink" title="Setting"></a>Setting</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs .js">import commonjs from &#x27;@rollup/plugin-commonjs&#x27;;<br>import &#123;nodeResolve&#125; from &#x27;@rollup/plugin-node-resolve&#x27;;<br>import nodePolyfills from &#x27;rollup-plugin-polyfill-node&#x27;;<br><br>export default &#123;<br>  input: &#x27;index.js&#x27;,<br>  output: &#123;<br>    file: &#x27;./dist/index.js&#x27;,<br>    format: &#x27;umd&#x27;,<br>    name: &#x27;Wasm&#x27;,<br>  &#125;,<br>  plugins: [nodeResolve(), commonjs(), nodePolyfills()]<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>index.js를 진입점으로 설정하고 output 설정을 해주었다. format은 umd를 사용하여 모듈 방식을 커버할 수 있도록 했다.</p>
+<p>이제 wasm 글루코드를 번들링해보도록 한다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">-s WASM=1 -lembind -s MODULARIZE=1 -s &#x27;EXPORT_NAME=\&quot;wasm\&quot;&#x27;<br></code></pre></td></tr></table></figure>
+<p>옵션은 다음과 같이 지정했다.</p>
+<p><code>MODULARIZE</code>을 추가한 이유는 익스포트한 자바스크립트가 모듈 형태로 되는 것도 있고, 이 모듈이 factory 함수 형태 반환하는데 factory 함수를 호출하면, 생성된 모듈이 다운로드되고 인스턴스화되는 과정이 진행되며 factory 함수가 반환하는 Promise가 resolved가 된다고 한다.</p>
+<p>로딩이 완료되는 시점에 c++로 바인딩한 함수를 사용할 수 있게 된다. 로드가 안된 상태에서 불러오는 불상사를 막을 수 있다.</p>
+<p><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/FAQ.html#how-can-i-tell-when-the-page-is-fully-loaded-and-it-is-safe-to-call-compiled-functions">https://emscripten.org/docs/getting_started/FAQ.html#how-can-i-tell-when-the-page-is-fully-loaded-and-it-is-safe-to-call-compiled-functions</a> 해당 링크를 확인하면 된다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> wasm <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./src/EmscriptenProject.js&#x27;</span>;<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Init</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">let</span> wasmModule;<br>    <span class="hljs-keyword">await</span> <span class="hljs-title function_">wasm</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">Module</span>) &#123; wasmModule = <span class="hljs-title class_">Module</span> &#125;);<br>    <span class="hljs-keyword">return</span> wasmModule;<br>&#125;<br><br><span class="hljs-keyword">export</span> &#123;<span class="hljs-title class_">Init</span>&#125;;<br></code></pre></td></tr></table></figure>
+<p>롤업의 input인 <code>index.js</code>이다. 간단하게 모듈을 로드를 하고 완료되면 모듈을 반환하도록 만들었다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">rollup -c<br></code></pre></td></tr></table></figure>
+<p>해당 명령어를 통해 번들링을 진행하면 <code>dist</code>폴더에 번들링된 <code>index.js</code> 파일이 생긴다. 여기서 주의할 점은 <code>dist</code>폴더 안에 <code>.wasm</code>파일도 있어야한다. 이 경로로 <code>.wasm</code> 파일을 옮겨주면 된다.</p>
+<p><code>html</code> 스크립트를 로드하고 사용하면 된다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;index.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;Module&quot;</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">var</span> wasmModule = <span class="hljs-keyword">await</span> <span class="hljs-title class_">Wasm</span>.<span class="hljs-title class_">Init</span>();</span><br><span class="language-javascript">    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(wasmModule.<span class="hljs-title class_">Add</span>(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>));</span><br><span class="language-javascript">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>html의 로그를 확인해보면 c++로 바인딩한 Add함수가 실행되는 것을 알 수 있다.</p>
+<h2 id="스크립트-작업"><a href="#스크립트-작업" class="headerlink" title="스크립트 작업"></a>스크립트 작업</h2><p>현재는 c++ 빌드 -&gt; 번들링하는 작업 이렇게 2가지 작업이 진행된다. 이걸 자동화를 해보자.</p>
+<p><a href="2023/02/19/my-wasm-project-setting/">이전글</a> 빌드 명령어 스크립트를 실행하면 번들링까지 되도록 하면 된다.</p>
+<p><code>CMakeLists.txt</code>에 다음의 코드를 추가하면 된다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">set(ROLLUP_OPTS $&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/../web/rollup.config.mjs)<br>ADD_CUSTOM_COMMAND(TARGET EmscriptenProject <br>    COMMAND cd $&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/../web &amp;&amp; npx rollup -c $&#123;ROLLUP_OPTS&#125;<br>    COMMAND $&#123;CMAKE_COMMAND&#125; -E copy $&#123;OUTPUT_DIR&#125;/EmscriptenProject.wasm $&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/../web/dist<br>    )<br></code></pre></td></tr></table></figure>
+<p>소스 코드가 빌드 될 때 실행되는 커스텀 명령어를 정의했다. 웹 관련 코드가 저장되어 있는 디렉토리로 작업 디렉토리를 변경하고, 롤업의 설정파일을 실행했다. 그러면 롤업 설정에 따라 dist 디렉토리에 번들링한 index.js가 생성되었을 것이다.<br>그 다음 코드는 <code>wasm</code> 파일을 dist 파일로 복사한다.</p>
+<p>이러면 c++ 빌드할 때 자동으로 번들링까지 진행된다!!!</p>
+<p>이제 취향껏 package.json의 scripts에 작성을 추가하면 된다.</p>
+<h2 id="여담"><a href="#여담" class="headerlink" title="여담"></a>여담</h2><p>자바스크립트나 웹 환경을 잘 모르는 초보 개발자가 해냈습니다. 추후에 라이브러리나 SDK로 배포를 하게 된다면 최종적으로 사용자가 쓰는 부분은 깔끔하게 간단하게 쓰이는 것이 좋다고 생각해서 이것저것 조사해보고 시행착오 끝냈다.</p>
+<p>나름 검색해도 정보가 사혼의 조각처럼 흩어졌기 때문에 정리했다!! 이제는 좀 더 작게작게 emscripten의 팁을 올려야겠다.</p>
+      
+    </div>
+
+    
+
+
+
+
+
+    
+<div class="post-tags">
+  
+  <a href="/tags/emscripten/" rel="tag"># emscripten</a>
+  
+  <a href="/tags/wasm/" rel="tag"># wasm</a>
+  
+  <a href="/tags/c/" rel="tag"># c++</a>
+  
+</div>
+
+
+    
+        
+
+    
+    <footer class="post-footer">
+      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/02/19/my-wasm-project-setting/" rel="prev" title="나의 WASM 프로젝트 세팅">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg>
+      나의 WASM 프로젝트 세팅
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/16/Creating-Github-webhook-logs-with-discord-forums/" rel="next" title="디스코드 포럼에 Github 알림 받기">
+      디스코드 포럼에 Github 알림...
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" class="svg-inline--fa fa-chevron-right icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>
+    </a></div>
+    </div>    </footer>
+    
+  </div>
+</article>
+</div>
+        </div>
+        
+
+
+
+
+<div class="card comment-body  active"><script src="https://giscus.app/client.js"
+  data-repo="keea/keea.github.io"
+  data-repo-id="R_kgDOKd9Xlg"
+  data-category="Comments"
+  data-category-id="DIC_kwDOKd9Xls4CZ-0E"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="ko"
+  crossorigin="anonymous"
+  async>
+</script></div>
+
+
+
+      </main>
+
+      <footer class="footer">
+        <div>
+          <div class="copyright">
+  
+  &copy; 
+  <span>2025</span>
+  <span class="with-love">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="heart" class="svg-inline--fa fa-heart icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"></path></svg>
+    <i class="[object Object]"></i>
+  </span>
+  <span class="author">keea</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v7.0.0
+</div>
+
+<span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  Theme – <a href="https://github.com/JiangTJ/hexo-theme-cake" class="theme-link" rel="noopener" target="_blank">Cake</a> v4.0.0
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <div class="search-popup">
+  <div class="search-header">
+    <span class="search-icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg></span>
+    <div class="search-input-container">
+      <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Searching..."
+        spellcheck="false" type="text" id="search-input">
+    </div>
+    <span class="popup-btn-close"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" class="svg-inline--fa fa-times-circle icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg></span>
+  </div>
+  <div id="search-result"></div>
+</div>
+<div class="search-pop-overlay"></div>
+<div class="moon-menu">
+  <div class="moon-menu-items">
+    
+    <div id="moon-menu-item-back2bottom" class="moon-menu-item">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" class="svg-inline--fa fa-chevron-down icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path></svg>    </div>
+    
+    <div id="moon-menu-item-back2top" class="moon-menu-item">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-up" class="svg-inline--fa fa-chevron-up icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z"></path></svg>    </div>
+    
+  </div>
+  <div class="moon-menu-button">
+    <svg class="moon-menu-bg">
+      <circle class="moon-menu-cricle" cx="50%" cy="50%" r="44%"></circle>
+      <circle class="moon-menu-border" cx="50%" cy="50%" r="48%"></circle>
+    </svg>
+    <div class="moon-menu-content">
+      <div class="moon-menu-icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-v" class="svg-inline--fa fa-ellipsis-v icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"></path></svg></div>
+      <div class="moon-menu-text"></div>
+    </div>
+  </div>
+</div><script src="/js/injector.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width"/>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Itim|Lobster.css">
+  <meta name="description" content="TL;DRemscripten은 c++을 이용해서 웹프로그래밍을 할 수 있다는 것이 너무 매력적이다.회사 업무로적이나 개인적으로나 관심이 많아 이것저것 시도해보고 있다. 내가 사용하는 방법을 정리하고자 한다. 기본적인 방법emscripten 공식 홈페이지에서 안내하는 방법이다. 1234567891011121314151617# Get the emsdk repo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="나의 WASM 프로젝트 세팅">
+<meta property="og:url" content="https://blog.keea.dev/2023/02/19/my-wasm-project-setting/index.html">
+<meta property="og:site_name" content="Keea.Dev">
+<meta property="og:description" content="TL;DRemscripten은 c++을 이용해서 웹프로그래밍을 할 수 있다는 것이 너무 매력적이다.회사 업무로적이나 개인적으로나 관심이 많아 이것저것 시도해보고 있다. 내가 사용하는 방법을 정리하고자 한다. 기본적인 방법emscripten 공식 홈페이지에서 안내하는 방법이다. 1234567891011121314151617# Get the emsdk repo">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2023-02-19T01:00:23.000Z">
+<meta property="article:modified_time" content="2025-08-16T05:52:22.887Z">
+<meta property="article:author" content="keea">
+<meta property="article:tag" content="emscripten">
+<meta property="article:tag" content="wasm">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">  <title>나의 WASM 프로젝트 세팅 | Keea.Dev</title>    <!-- Naver -->
+<meta name="naver-site-verification" content="e8b552825571ddb64acddc5ed48fb819a0de57fc" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E5BT0W34TG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-E5BT0W34TG');
+</script>
+
+<!-- Naver analytics -->
+<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript">
+if(!wcs_add) var wcs_add = {};
+wcs_add["wa"] = "7c4827c2e26f70";
+if(window.wcs) {
+  wcs_do();
+}
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2023/02/19/my-wasm-project-setting/"},"headline":"나의 WASM 프로젝트 세팅","image":[],"datePublished":"2023-02-19T01:00:23.000Z","dateModified":"2025-08-16T05:52:22.887Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><link rel="stylesheet" type="text/css" href="/css/injector/main.css" /><link rel="preload" as="style" href="/css/injector/light.css" /><link rel="preload" as="style" href="/css/injector/dark.css" /><link rel="preload" as="style" href="/css/injector/auto.css" /><meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/rss2.xml" title="Keea.Dev" type="application/rss+xml">
+</head>
+
+<body>
+
+    
+  <header class="main-header">
+    <div class="header-inner card"><div class="brand">
+  <div class="site-meta">
+    <div class="custom-logo-site-title">
+      <a href="/">
+        <span class="site-title">Keea.Dev</span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg>    </button>
+  </div>
+</div>
+<nav class="site-nav">
+  <ul class="menu">
+    <li class="menu-item menu-item-home"><a href="/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="home" class="svg-inline--fa fa-home icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path></svg>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" class="svg-inline--fa fa-tags icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path></svg>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="th" class="svg-inline--fa fa-th icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path></svg>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="archive" class="svg-inline--fa fa-archive icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"></path></svg>Archives</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>Search</a></li>  </ul>
+</nav>
+</div>
+  </header>
+
+  <div class="flex-container">
+
+    
+
+<aside class="sidebar">
+
+  <div class="header-inner card">
+    <div class="brand">
+  <div class="site-meta">
+    <div class="custom-logo-site-title">
+      <a href="/">
+        <span class="site-title">Keea.Dev</span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg>    </button>
+  </div>
+</div>
+<nav class="site-nav">
+  <ul class="menu">
+    <li class="menu-item menu-item-home"><a href="/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="home" class="svg-inline--fa fa-home icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path></svg>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" class="svg-inline--fa fa-tags icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path></svg>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="th" class="svg-inline--fa fa-th icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path></svg>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="archive" class="svg-inline--fa fa-archive icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"></path></svg>Archives</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>Search</a></li>  </ul>
+</nav>
+  </div>
+
+  <div class="sidebar-inner card">
+
+    
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc sidebar-nav-active">
+        Table of Contents
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="post-toc-wrap sidebar-panel sidebar-panel-active">
+      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B8%B0%EB%B3%B8%EC%A0%81%EC%9D%B8-%EB%B0%A9%EB%B2%95"><span class="nav-number">2.</span> <span class="nav-text">기본적인 방법</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMake"><span class="nav-number">3.</span> <span class="nav-text">CMake</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%89%98-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%9E%91%EC%84%B1"><span class="nav-number">4.</span> <span class="nav-text">쉘 스크립트 작성</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%83%98%ED%94%8C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8"><span class="nav-number">5.</span> <span class="nav-text">샘플 프로젝트</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%97%AC%EB%8B%B4"><span class="nav-number">6.</span> <span class="nav-text">여담</span></a></li></ol></div>
+    </div>
+    <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview">
+  <div class="site-author">
+    
+    <img class="site-author-image" src="/images/avatar.jpeg"
+      alt="keea" />
+    
+    <p class="site-author-name">keea</p>
+    <div class="site-description">내 마음 끌리는 대로 개발</div>
+  </div>
+
+  <nav class="site-state">
+    
+    <div class="site-state-item site-state-posts">
+      <a href="/archives/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">posts</span>
+      </a>
+    </div>
+    
+
+    
+    <div class="site-state-item site-state-categories">
+      <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span>
+      </a>
+    </div>
+    
+
+    
+    <div class="site-state-item site-state-tags">
+      <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">tags</span>
+      </a>
+    </div>
+    
+  </nav>
+
+  <div class="social-links"><a href="/rss2.xml" title="/rss2.xml" rel="noopener" target="_blank"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="rss" class="svg-inline--fa fa-rss icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M128.081 415.959c0 35.369-28.672 64.041-64.041 64.041S0 451.328 0 415.959s28.672-64.041 64.041-64.041 64.04 28.673 64.04 64.041zm175.66 47.25c-8.354-154.6-132.185-278.587-286.95-286.95C7.656 175.765 0 183.105 0 192.253v48.069c0 8.415 6.49 15.472 14.887 16.018 111.832 7.284 201.473 96.702 208.772 208.772.547 8.397 7.604 14.887 16.018 14.887h48.069c9.149.001 16.489-7.655 15.995-16.79zm144.249.288C439.596 229.677 251.465 40.445 16.503 32.01 7.473 31.686 0 38.981 0 48.016v48.068c0 8.625 6.835 15.645 15.453 15.999 191.179 7.839 344.627 161.316 352.465 352.465.353 8.618 7.373 15.453 15.999 15.453h48.068c9.034-.001 16.329-7.474 16.005-16.504z"></path></svg></a><a href="https://github.com/keea" title="https://github.com/keea" rel="noopener" target="_blank"><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" class="svg-inline--fa fa-github icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></a></div>
+</div>
+    </div>
+
+    
+
+  </div>
+</aside>
+
+    <div class="flex-main">
+
+      <main>
+        
+        <div id="content" class="content">
+          <div>
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
+
+    
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        나의 WASM 프로젝트 세팅
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2023-02-19 10:00:23">2023-02-19</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>emscripten은 c++을 이용해서 웹프로그래밍을 할 수 있다는 것이 너무 매력적이다.<br>회사 업무로적이나 개인적으로나 관심이 많아 이것저것 시도해보고 있다. 내가 사용하는 방법을 정리하고자 한다.</p>
+<h2 id="기본적인-방법"><a href="#기본적인-방법" class="headerlink" title="기본적인 방법"></a>기본적인 방법</h2><p><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">emscripten 공식 홈페이지</a>에서 안내하는 방법이다.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">Get the emsdk repo</span><br>git clone https://github.com/emscripten-core/emsdk.git<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Enter that directory</span><br>cd emsdk<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Fetch the latest version of the emsdk (not needed the first time you <span class="hljs-built_in">clone</span>)</span><br>git pull<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Download and install the latest SDK tools.</span><br>./emsdk install latest<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Make the <span class="hljs-string">&quot;latest&quot;</span> SDK <span class="hljs-string">&quot;active&quot;</span> <span class="hljs-keyword">for</span> the current user. (writes .emscripten file)</span><br>./emsdk activate latest<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Activate PATH and other environment variables <span class="hljs-keyword">in</span> the current terminal</span><br>source ./emsdk_env.sh<br></code></pre></td></tr></table></figure>
+<p>git에서 <code>sdk</code>를 설치한 후 원하는 <code>emscripten</code> 버전을 설치. 그 다음 활성화 하는 것이다.</p>
+<p>그 후 빌드를 하면 된다. <code>emcc</code> 명령어에 빌드할 파일을 추가시키면 된다.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./emcc test/hello_world.c -o hello.html<br></code></pre></td></tr></table></figure>
+<p><code>html</code> 파일도 같이 얻고 싶기 위해서 <code>-o</code> 명령어를 사용해 <code>html</code>을 얻는다.<br>자세한 내용은 <a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/Tutorial.html">여기서</a> 확인하면 된다.</p>
+<p>하지만 파일이 하나라면 이 방법이 편한데 만약 프로젝트가 크다면 불편하다. cmake를 이용해 빌드하는 방법을 주로 사용한다.</p>
+<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>나의 프로젝트 구성은 다음과 같다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">.<br>|____cpp<br>| |____CMakeLists.txt<br>| |____src<br>| | |____main.cpp<br>|____web<br></code></pre></td></tr></table></figure>
+<p><code>cpp</code> 폴더에는 c++ 프로젝트에 대한 것을 다 포함 시킨다.<code>web</code> 폴더에는 web에 관한 파일들을 포함 시킬 예정이다.</p>
+<p>CMakeFile 내용은 다음과 같다.</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.0</span>.<span class="hljs-number">0</span>)<br><span class="hljs-keyword">project</span>(EmscriptenProject VERSION <span class="hljs-number">0.1</span>.<span class="hljs-number">0</span>)<br><br><br><span class="hljs-keyword">add_executable</span>(EmscriptenProject src/main.cpp)<br><br><span class="hljs-keyword">if</span>(EMSCRIPTEN)<br><span class="hljs-keyword">set</span>(OUTPUT_DIR <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/../web/src)<br><span class="hljs-keyword">set_target_properties</span>(EmscriptenProject PROPERTIES<br>    RUNTIME_OUTPUT_DIRECTORY <span class="hljs-variable">$&#123;OUTPUT_DIR&#125;</span><br>    SUFFIX <span class="hljs-string">&quot;.html&quot;</span><br>    LINK_FLAGS <span class="hljs-string">&quot;-s WASM=1&quot;</span><br>)<br><br><span class="hljs-keyword">endif</span>()<br></code></pre></td></tr></table></figure>
+<p><code>OUTPUT_DIR</code>에 export할 <code>.wasm</code>, <code>.js</code>, <code>.html</code> 경로를 설정해준다.<br><code>SUFFIX</code>으로 <code>html</code> 파일이 익스포트할 거라고 알리고 <code>LINK_FLAGS</code>에 emscripten 옵션을 추가해주면 된다. <a target="_blank" rel="noopener" href="https://emscripten.org/docs/tools_reference/emcc.html">여기서</a> 확인하고 필요한 옵션을 추가하면 된다.</p>
+<p>해당 <code>main.cpp</code>는 <code>hello world</code>를 출력하는거라서 많은 옵션을 추가하지 않았다.</p>
+<p>빌드 명령어는 다음과 같다.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cmake -S . -B ./.web-build --toolchain ./emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake<br>cmake --build ./.web-build --config Release<br></code></pre></td></tr></table></figure>
+<p><code>CMakeLists.txt</code> 파일이 존재하는 경로에서 실행하면 된다. 여기서 <code>--toolchain</code> 다음 부분에 자신의 emsdk 경로를 추가하면 된다.</p>
+<p>빌드 후 파일 구조는 다음과 같다(기타 파일들을 가렸다).</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">.<br>|____web<br>| |____src<br>| | |____EmscriptenProject.js<br>| | |____EmscriptenProject.wasm<br>| | |____EmscriptenProject.html<br>|____cpp<br>| |____CMakeLists.txt<br>| |____.web-build<br>| |____src<br>| | |____main.cpp<br></code></pre></td></tr></table></figure>
+<p><code>web/scr</code>에 파일이 추가된 것을 확인할 수 있다. html을 바로 클릭하면 실행할 수 없다. XHR 요청을 지원하지 않으면 <code>.wasm</code> 파일을 요청할 수 없기 때문이다. 로컬 웹서버를 사용해야한다. 나는 주로 <code>vscode</code>의 <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer">Live Server</a>를 사용한다.</p>
+<p>html을 실행하면 <code>hello world!</code>가 출력되는 것을 확인할 수 있다.</p>
+<h2 id="쉘-스크립트-작성"><a href="#쉘-스크립트-작성" class="headerlink" title="쉘 스크립트 작성"></a>쉘 스크립트 작성</h2><p>명령어를 일일히 입력하기 귀찮기 때문에 쉘 스크립트를 추가한다. 우선 emscripten을 설치하는 스크립트를 작성했다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># install_emsdk.sh</span><br><br>DIRECTORY=<span class="hljs-string">&quot;<span class="hljs-subst">$( cd <span class="hljs-string">&quot;<span class="hljs-subst">$( dirname <span class="hljs-string">&quot;<span class="hljs-variable">$0</span>&quot;</span> )</span>&quot;</span> &amp;&amp; pwd -P )</span>&quot;</span><br><br><span class="hljs-built_in">cd</span> <span class="hljs-variable">$&#123;DIRECTORY&#125;</span><br><br><span class="hljs-comment"># Get the emsdk repo</span><br>git <span class="hljs-built_in">clone</span> https://github.com/emscripten-core/emsdk.git<br><br><span class="hljs-comment"># Enter that directory</span><br><span class="hljs-built_in">cd</span> emsdk<br><br><span class="hljs-comment"># Fetch the latest version of the emsdk (not needed the first time you clone)</span><br>git pull<br><br><span class="hljs-comment"># Download and install the latest SDK tools.</span><br>./emsdk install latest<br><br><span class="hljs-comment"># Make the &quot;latest&quot; SDK &quot;active&quot; for the current user. (writes .emscripten file)</span><br>./emsdk activate latest<br></code></pre></td></tr></table></figure>
+<p>최초 1회만 실행하면 된다. 그러면 <code>install_emsdk.sh</code> 가 위치한 곳에 <code>emsdk</code>를 다운받고 설치한다.</p>
+<p>그 다음 빌드 명령어도 스크립트로 만든다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># build_web.sh</span><br>CURRENT_DIRECTORY=<span class="hljs-string">&quot;<span class="hljs-subst">$( cd <span class="hljs-string">&quot;<span class="hljs-subst">$( dirname <span class="hljs-string">&quot;<span class="hljs-variable">$0</span>&quot;</span> )</span>&quot;</span> &amp;&amp; pwd -P )</span>&quot;</span><br>EMSDK=<span class="hljs-variable">$&#123;CURRENT_DIRECTORY&#125;</span>/emsdk<br><br>cmake -S <span class="hljs-variable">$&#123;CURRENT_DIRECTORY&#125;</span> -B <span class="hljs-variable">$&#123;CURRENT_DIRECTORY&#125;</span>/.web-build --toolchain <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;EMSDK&#125;</span>/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake&quot;</span><br>cmake --build <span class="hljs-variable">$&#123;CURRENT_DIRECTORY&#125;</span>/.web-build --config Release<br></code></pre></td></tr></table></figure>
+<p>쉘 스크립트 실행으로 빌드까지 할 수 있다. 쉘 스크립트 위치는 <code>cpp</code> 폴더에 포함 시켰다.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">.<br>|____web<br>| |____src<br>| | |____EmscriptenProject.js<br>| | |____EmscriptenProject.wasm<br>| | |____EmscriptenProject.html<br>|____cpp<br>| |____CMakeLists.txt<br>| |____build_web.sh<br>| |____install_emsdk.sh<br>| |____.web-build<br>| |____src<br>| | |____main.cpp<br></code></pre></td></tr></table></figure>
+<p>빌드 까지 완료한 파일 구조이다.</p>
+<h2 id="샘플-프로젝트"><a href="#샘플-프로젝트" class="headerlink" title="샘플 프로젝트"></a>샘플 프로젝트</h2><p>저장소를 만들었으니 여기서 확인하면 된다.<br><a target="_blank" rel="noopener" href="https://github.com/keea/sample-emscripten-project-template">https://github.com/keea/sample-emscripten-project-template</a></p>
+<h2 id="여담"><a href="#여담" class="headerlink" title="여담"></a>여담</h2><p>우선 간단한 샘플 만드는 것부터 정리했다. 그 외에 다양한 방법을 연구한 것이 있는데 추후에 문서를 작성하고 여기에 추가하도록 하겠다. 예를 들어 js만 뽑아서 번들링 한다던가… 리엑트와 연동시킨다던가 등등!!</p>
+<p>그리고 샘플 저장소의 README는 ChatGPT가 적어줬다.</p>
+      
+    </div>
+
+    
+
+
+
+
+
+    
+<div class="post-tags">
+  
+  <a href="/tags/emscripten/" rel="tag"># emscripten</a>
+  
+  <a href="/tags/wasm/" rel="tag"># wasm</a>
+  
+  <a href="/tags/c/" rel="tag"># c++</a>
+  
+</div>
+
+
+    
+        
+
+    
+    <footer class="post-footer">
+      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/27/hackmd-to-hugo/" rel="prev" title="HackMD 글을 Hugo 형태로 변경">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg>
+      HackMD 글을 Hugo 형태로...
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/25/my-wasm-project-setting-embind/" rel="next" title="나의 WASM 프로젝트 세팅 - embind">
+      나의 WASM 프로젝트 세팅 - ...
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" class="svg-inline--fa fa-chevron-right icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>
+    </a></div>
+    </div>    </footer>
+    
+  </div>
+</article>
+</div>
+        </div>
+        
+
+
+
+
+<div class="card comment-body  active"><script src="https://giscus.app/client.js"
+  data-repo="keea/keea.github.io"
+  data-repo-id="R_kgDOKd9Xlg"
+  data-category="Comments"
+  data-category-id="DIC_kwDOKd9Xls4CZ-0E"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="ko"
+  crossorigin="anonymous"
+  async>
+</script></div>
+
+
+
+      </main>
+
+      <footer class="footer">
+        <div>
+          <div class="copyright">
+  
+  &copy; 
+  <span>2025</span>
+  <span class="with-love">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="heart" class="svg-inline--fa fa-heart icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"></path></svg>
+    <i class="[object Object]"></i>
+  </span>
+  <span class="author">keea</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v7.0.0
+</div>
+
+<span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  Theme – <a href="https://github.com/JiangTJ/hexo-theme-cake" class="theme-link" rel="noopener" target="_blank">Cake</a> v4.0.0
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <div class="search-popup">
+  <div class="search-header">
+    <span class="search-icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg></span>
+    <div class="search-input-container">
+      <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Searching..."
+        spellcheck="false" type="text" id="search-input">
+    </div>
+    <span class="popup-btn-close"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" class="svg-inline--fa fa-times-circle icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg></span>
+  </div>
+  <div id="search-result"></div>
+</div>
+<div class="search-pop-overlay"></div>
+<div class="moon-menu">
+  <div class="moon-menu-items">
+    
+    <div id="moon-menu-item-back2bottom" class="moon-menu-item">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" class="svg-inline--fa fa-chevron-down icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path></svg>    </div>
+    
+    <div id="moon-menu-item-back2top" class="moon-menu-item">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-up" class="svg-inline--fa fa-chevron-up icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z"></path></svg>    </div>
+    
+  </div>
+  <div class="moon-menu-button">
+    <svg class="moon-menu-bg">
+      <circle class="moon-menu-cricle" cx="50%" cy="50%" r="44%"></circle>
+      <circle class="moon-menu-border" cx="50%" cy="50%" r="48%"></circle>
+    </svg>
+    <div class="moon-menu-content">
+      <div class="moon-menu-icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-v" class="svg-inline--fa fa-ellipsis-v icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"></path></svg></div>
+      <div class="moon-menu-text"></div>
+    </div>
+  </div>
+</div><script src="/js/injector.js"></script>
+</body>
+
+</html>

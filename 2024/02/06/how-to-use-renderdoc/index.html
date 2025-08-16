@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width"/>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Itim|Lobster.css">
+  <meta name="description" content="TL;DROpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다. 설치https:&#x2F;&#x2F;renderdoc.or">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RenderDoc 사용 방법">
+<meta property="og:url" content="https://blog.keea.dev/2024/02/06/how-to-use-renderdoc/index.html">
+<meta property="og:site_name" content="Keea.Dev">
+<meta property="og:description" content="TL;DROpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다. 설치https:&#x2F;&#x2F;renderdoc.or">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-1.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-2.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image_1706152588023_0.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-3.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-4.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-5.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-6.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-7.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-8.webp">
+<meta property="og:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image-9.webp">
+<meta property="article:published_time" content="2024-02-06T11:05:41.000Z">
+<meta property="article:modified_time" content="2025-08-16T06:37:02.719Z">
+<meta property="article:author" content="keea">
+<meta property="article:tag" content="Development Tools">
+<meta property="article:tag" content="RenderDoc">
+<meta property="article:tag" content="Graphics Debugging">
+<meta property="article:tag" content="Rendering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.keea.dev/images/how-to-use-renderdoc.md/image.webp">  <title>RenderDoc 사용 방법 | Keea.Dev</title>    <!-- Naver -->
+<meta name="naver-site-verification" content="e8b552825571ddb64acddc5ed48fb819a0de57fc" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E5BT0W34TG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-E5BT0W34TG');
+</script>
+
+<!-- Naver analytics -->
+<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript">
+if(!wcs_add) var wcs_add = {};
+wcs_add["wa"] = "7c4827c2e26f70";
+if(window.wcs) {
+  wcs_do();
+}
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.keea.dev/2024/02/06/how-to-use-renderdoc/"},"headline":"RenderDoc 사용 방법","image":[],"datePublished":"2024-02-06T11:05:41.000Z","dateModified":"2025-08-16T06:37:02.719Z","author":{"@type":"Person","name":"keea"},"publisher":{"@type":"Organization","name":"keea","logo":{"@type":"ImageObject","url":"https://blog.keea.dev/images/avatar.jpeg"}}}</script><link rel="stylesheet" type="text/css" href="/css/injector/main.css" /><link rel="preload" as="style" href="/css/injector/light.css" /><link rel="preload" as="style" href="/css/injector/dark.css" /><link rel="preload" as="style" href="/css/injector/auto.css" /><meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/rss2.xml" title="Keea.Dev" type="application/rss+xml">
+</head>
+
+<body>
+
+    
+  <header class="main-header">
+    <div class="header-inner card"><div class="brand">
+  <div class="site-meta">
+    <div class="custom-logo-site-title">
+      <a href="/">
+        <span class="site-title">Keea.Dev</span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg>    </button>
+  </div>
+</div>
+<nav class="site-nav">
+  <ul class="menu">
+    <li class="menu-item menu-item-home"><a href="/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="home" class="svg-inline--fa fa-home icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path></svg>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" class="svg-inline--fa fa-tags icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path></svg>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="th" class="svg-inline--fa fa-th icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path></svg>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="archive" class="svg-inline--fa fa-archive icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"></path></svg>Archives</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>Search</a></li>  </ul>
+</nav>
+</div>
+  </header>
+
+  <div class="flex-container">
+
+    
+
+<aside class="sidebar">
+
+  <div class="header-inner card">
+    <div class="brand">
+  <div class="site-meta">
+    <div class="custom-logo-site-title">
+      <a href="/">
+        <span class="site-title">Keea.Dev</span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg>    </button>
+  </div>
+</div>
+<nav class="site-nav">
+  <ul class="menu">
+    <li class="menu-item menu-item-home"><a href="/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="home" class="svg-inline--fa fa-home icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path></svg>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tags" class="svg-inline--fa fa-tags icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path></svg>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="th" class="svg-inline--fa fa-th icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path></svg>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="archive" class="svg-inline--fa fa-archive icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"></path></svg>Archives</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>Search</a></li>  </ul>
+</nav>
+  </div>
+
+  <div class="sidebar-inner card">
+
+    
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc sidebar-nav-active">
+        Table of Contents
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="post-toc-wrap sidebar-panel sidebar-panel-active">
+      <div class="post-toc"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%84%A4%EC%B9%98"><span class="nav-number">2.</span> <span class="nav-text">설치</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Capturing-a-frame"><span class="nav-number">3.</span> <span class="nav-text">Capturing a frame</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Setting"><span class="nav-number">3.1.</span> <span class="nav-text">Program Setting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%94%84%EB%A0%88%EC%9E%84-%EC%BA%A1%EC%B2%98"><span class="nav-number">4.</span> <span class="nav-text">프레임 캡처</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B7%B8%EB%9E%98%ED%94%BD-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B2%80%EC%82%AC"><span class="nav-number">5.</span> <span class="nav-text">그래픽 파이프라인 검사</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%ED%9D%90%EB%A6%84%EB%8F%84"><span class="nav-number">5.1.</span> <span class="nav-text">파이프라인 흐름도</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%B2%84%ED%8D%BC-%EA%B2%80%EC%82%AC"><span class="nav-number">6.</span> <span class="nav-text">버퍼 검사</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%85%8D%EC%8A%A4%EC%B2%98-%EA%B2%80%EC%82%AC"><span class="nav-number">7.</span> <span class="nav-text">텍스처 검사</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%82%AC%EC%9A%A9-%EC%98%88%EC%8B%9C"><span class="nav-number">8.</span> <span class="nav-text">사용 예시</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VertexShader-Input-%EA%B0%92%EA%B3%BC-Output-%EA%B0%92%EC%9D%84-%ED%99%95%EC%9D%B8-Opengl"><span class="nav-number">8.1.</span> <span class="nav-text">VertexShader Input 값과 Output 값을 확인(Opengl)</span></a></li></ol></li></ol></div>
+    </div>
+    <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview">
+  <div class="site-author">
+    
+    <img class="site-author-image" src="/images/avatar.jpeg"
+      alt="keea" />
+    
+    <p class="site-author-name">keea</p>
+    <div class="site-description">내 마음 끌리는 대로 개발</div>
+  </div>
+
+  <nav class="site-state">
+    
+    <div class="site-state-item site-state-posts">
+      <a href="/archives/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">posts</span>
+      </a>
+    </div>
+    
+
+    
+    <div class="site-state-item site-state-categories">
+      <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span>
+      </a>
+    </div>
+    
+
+    
+    <div class="site-state-item site-state-tags">
+      <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">tags</span>
+      </a>
+    </div>
+    
+  </nav>
+
+  <div class="social-links"><a href="/rss2.xml" title="/rss2.xml" rel="noopener" target="_blank"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="rss" class="svg-inline--fa fa-rss icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M128.081 415.959c0 35.369-28.672 64.041-64.041 64.041S0 451.328 0 415.959s28.672-64.041 64.041-64.041 64.04 28.673 64.04 64.041zm175.66 47.25c-8.354-154.6-132.185-278.587-286.95-286.95C7.656 175.765 0 183.105 0 192.253v48.069c0 8.415 6.49 15.472 14.887 16.018 111.832 7.284 201.473 96.702 208.772 208.772.547 8.397 7.604 14.887 16.018 14.887h48.069c9.149.001 16.489-7.655 15.995-16.79zm144.249.288C439.596 229.677 251.465 40.445 16.503 32.01 7.473 31.686 0 38.981 0 48.016v48.068c0 8.625 6.835 15.645 15.453 15.999 191.179 7.839 344.627 161.316 352.465 352.465.353 8.618 7.373 15.453 15.999 15.453h48.068c9.034-.001 16.329-7.474 16.005-16.504z"></path></svg></a><a href="https://github.com/keea" title="https://github.com/keea" rel="noopener" target="_blank"><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" class="svg-inline--fa fa-github icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></a></div>
+</div>
+    </div>
+
+    
+
+  </div>
+</aside>
+
+    <div class="flex-main">
+
+      <main>
+        
+        <div id="content" class="content">
+          <div>
+  
+
+<article class="post post-type-normal">
+  <div class="card post-block">
+
+    
+
+    <header class="post-header">
+
+      
+      <h1 class="post-title">
+        
+        RenderDoc 사용 방법
+        
+      </h1>
+      
+
+      <div class="post-meta">
+
+  
+  
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="calendar" class="svg-inline--fa fa-calendar icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>
+    </span>
+    <span class="post-meta-item-text">Posted on</span>
+    <time title="Created: 2024-02-06 20:05:41">2024-02-06</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+</div>
+
+    </header>
+
+    <div class="post-body">
+      
+      <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>OpenGL을 사용하여 작업하는데 렌더링이 제대로 되지 않는 경우가 빈번해서 꽤나 골치아팠다. 이럴 때 디버깅을 할 수 있는 도구가 있을까 찾아보다가 렌더독(RenderDoc)을 알게 되었다! 렌더독을 사용하면서 많은 문제들을 해결할 수 있게 되었다. 지금은 렌더독을 사용하는 방법에 대해 정리해보고자 한다.</p>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><p><a target="_blank" rel="noopener" href="https://renderdoc.org/builds">https://renderdoc.org/builds</a> 에서 파일을 다운 받아 설치</p>
+<h2 id="Capturing-a-frame"><a href="#Capturing-a-frame" class="headerlink" title="Capturing a frame"></a>Capturing a frame</h2><p><code>File</code> -&gt; <code>Launch Application</code><br><img src="/images/how-to-use-renderdoc.md/image.webp" alt="Alt text"></p>
+<h3 id="Program-Setting"><a href="#Program-Setting" class="headerlink" title="Program Setting"></a><code>Program</code> Setting</h3><ul>
+<li><code>Excutable Path</code>  :  캡쳐할 어플리케이션의 실행 파일 경로를 선택. 캡쳐하려는 프로그램이 어디에 설치되어 있는지 정확히 지정해야한다.</li>
+<li><code>Working Directory</code> : 어플리케이션을 실행할 때 필요한 작업 디렉토리를 설정. 어플리케이션이 관련된 파일을 찾을 수 있도록 정확한 디렉토리를 지정해야 한다.</li>
+<li><code>Command-line Arguments</code> : 어플리케이션을 실행할 때 필요한 커맨드 라인 인자를 설정.</li>
+</ul>
+<p><code>Launch</code> 버튼으로 실행.</p>
+<h2 id="프레임-캡처"><a href="#프레임-캡처" class="headerlink" title="프레임 캡처"></a>프레임 캡처</h2><p>RenderDoc이 성공적으로 로드외어 프레임을 캡쳐할 준비가 되었음을 나타내기 위한 최소한의 인앱 오버레이가 존재.<br>준비가 되면 <code>F12</code> 또는 <code>PrintScreen</code>를 누르면 다음 프레임이 캡쳐되며 이는 오버레이에 표시되어 프레임이 성공적으로 저장되었음을 알려줌.<br><img src="/images/how-to-use-renderdoc.md/image-1.webp" alt="Alt text"><br>어플리케이션이 종료될 때 프레임을 캡처한 경우 자동으로 RenderDoc UI에서 열리기 시작함.</p>
+<h2 id="그래픽-파이프라인-검사"><a href="#그래픽-파이프라인-검사" class="headerlink" title="그래픽 파이프라인 검사"></a>그래픽 파이프라인 검사</h2><p>파이프라인 뷰어는 그래픽 파이프라인의 모든 상태 설정을 보여주며, 바인딩 된 리소스, 래스터라이저 설정 등을 포함한다.<br><code>Window</code> -&gt; <code>Pipeline State</code><br><img src="/images/how-to-use-renderdoc.md/image-2.webp" alt="Alt text"></p>
+<h3 id="파이프라인-흐름도"><a href="#파이프라인-흐름도" class="headerlink" title="파이프라인 흐름도"></a>파이프라인 흐름도</h3><p>파이프라인 뷰어 상단에 파이프라인 흐름도가 존재.<br>그래픽 파이프라인의 고수준 블록 레벨 다이어그램을 보여줌.<br><img src="/images/how-to-use-renderdoc.md/image_1706152588023_0.webp" alt="Alt text"></p>
+<ul>
+<li>빨간색 : 선택한 블록.</li>
+<li>연한 회색 : 현재 활성화되어 이 작업에 참여하는 부분.</li>
+<li>어두운 회색 : 비활성화되어 패스스루 &#x2F; 아무 동작도 수행하지 않음.</li>
+</ul>
+<h2 id="버퍼-검사"><a href="#버퍼-검사" class="headerlink" title="버퍼 검사"></a>버퍼 검사</h2><p>파이프라인 단계(<code>VTX(Vertex Input)</code>, <code>VS</code>, <code>FS</code>) 에서 버퍼를 확인할 수 있다.<br><img src="/images/how-to-use-renderdoc.md/image-3.webp" alt="Alt text"></p>
+<ul>
+<li><code>glDrawElements</code> 이벤트의 <code>VTX (Vertex Input)</code>단계의 버퍼 확인.</li>
+</ul>
+<p>이동 아이콘을 누르면 더 자세한 보기가 가능하다.<br><img src="/images/how-to-use-renderdoc.md/image-4.webp" alt="Alt text"></p>
+<ul>
+<li>자세한 보기를 누른 상태.</li>
+<li><code>vertex.aPos</code>의 값을 확인할 수 있다.</li>
+</ul>
+<h2 id="텍스처-검사"><a href="#텍스처-검사" class="headerlink" title="텍스처 검사"></a>텍스처 검사</h2><p>텍스처 뷰어는 어플리케이션에서 텍스처를 검사하고 대상을 렌더링 할 수 있다.<br>다양한 시각화 컨트롤이 있어 여러 채널, 밉 레벨 등을 볼 수 있다.<br><img src="/images/how-to-use-renderdoc.md/image-5.webp" alt="Alt text"></p>
+<h2 id="사용-예시"><a href="#사용-예시" class="headerlink" title="사용 예시"></a>사용 예시</h2><h3 id="VertexShader-Input-값과-Output-값을-확인-Opengl"><a href="#VertexShader-Input-값과-Output-값을-확인-Opengl" class="headerlink" title="VertexShader Input 값과 Output 값을 확인(Opengl)"></a>VertexShader Input 값과 Output 값을 확인(Opengl)</h3><ol>
+<li><code>Event Browser</code>에서 <code>glDrawElements</code> 이벤트 선택.</li>
+<li><code>Pipeline State</code>에서 <code>VTX(Vertex Input)</code> 단계 <code>Vertex Attribute Format</code>을 아무거나 <code>Go</code>(초록색 화살표 클릭).<br><img src="/images/how-to-use-renderdoc.md/image-6.webp" alt="Alt text"></li>
+<li><code>Mesh Viewer</code> 창이 뜨며 <code>VS Input</code>에서 입력 값과 <code>VS Output</code>에서 버택스 셰이더의 아웃풋 값을 확인할 수 있다.<br><img src="/images/how-to-use-renderdoc.md/image-7.webp" alt="Alt text"></li>
+</ol>
+<p>Preview에서 메시를 확인할 수 있다.</p>
+<ul>
+<li><p><code>VS In</code>의 메시.<br><img src="/images/how-to-use-renderdoc.md/image-8.webp" alt="Alt text"></p>
+</li>
+<li><p><code>VS Out</code>의 메시.<br><img src="/images/how-to-use-renderdoc.md/image-9.webp" alt="Alt text"></p>
+</li>
+</ul>
+      
+    </div>
+
+    
+
+
+
+
+
+    
+<div class="post-tags">
+  
+  <a href="/tags/Development-Tools/" rel="tag"># Development Tools</a>
+  
+  <a href="/tags/RenderDoc/" rel="tag"># RenderDoc</a>
+  
+  <a href="/tags/Graphics-Debugging/" rel="tag"># Graphics Debugging</a>
+  
+  <a href="/tags/Rendering/" rel="tag"># Rendering</a>
+  
+</div>
+
+
+    
+        
+
+    
+    <footer class="post-footer">
+      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/04/c++-development-visual-studio-code-windows/" rel="prev" title="Windows에서 Visual Studio Code로 C++ 개발 환경 설정하기">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"></path></svg>
+      Windows에서 Visual S...
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/02/23/management-with-circular-queue/" rel="next" title="메모리 문제 해결하기">
+      메모리 문제 해결하기
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" class="svg-inline--fa fa-chevron-right icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>
+    </a></div>
+    </div>    </footer>
+    
+  </div>
+</article>
+</div>
+        </div>
+        
+
+
+
+
+<div class="card comment-body  active"><script src="https://giscus.app/client.js"
+  data-repo="keea/keea.github.io"
+  data-repo-id="R_kgDOKd9Xlg"
+  data-category="Comments"
+  data-category-id="DIC_kwDOKd9Xls4CZ-0E"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="ko"
+  crossorigin="anonymous"
+  async>
+</script></div>
+
+
+
+      </main>
+
+      <footer class="footer">
+        <div>
+          <div class="copyright">
+  
+  &copy; 
+  <span>2025</span>
+  <span class="with-love">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="heart" class="svg-inline--fa fa-heart icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"></path></svg>
+    <i class="[object Object]"></i>
+  </span>
+  <span class="author">keea</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v7.0.0
+</div>
+
+<span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  Theme – <a href="https://github.com/JiangTJ/hexo-theme-cake" class="theme-link" rel="noopener" target="_blank">Cake</a> v4.0.0
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <div class="search-popup">
+  <div class="search-header">
+    <span class="search-icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg></span>
+    <div class="search-input-container">
+      <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Searching..."
+        spellcheck="false" type="text" id="search-input">
+    </div>
+    <span class="popup-btn-close"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" class="svg-inline--fa fa-times-circle icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg></span>
+  </div>
+  <div id="search-result"></div>
+</div>
+<div class="search-pop-overlay"></div>
+<div class="moon-menu">
+  <div class="moon-menu-items">
+    
+    <div id="moon-menu-item-back2bottom" class="moon-menu-item">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" class="svg-inline--fa fa-chevron-down icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path></svg>    </div>
+    
+    <div id="moon-menu-item-back2top" class="moon-menu-item">
+      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-up" class="svg-inline--fa fa-chevron-up icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z"></path></svg>    </div>
+    
+  </div>
+  <div class="moon-menu-button">
+    <svg class="moon-menu-bg">
+      <circle class="moon-menu-cricle" cx="50%" cy="50%" r="44%"></circle>
+      <circle class="moon-menu-border" cx="50%" cy="50%" r="48%"></circle>
+    </svg>
+    <div class="moon-menu-content">
+      <div class="moon-menu-icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-v" class="svg-inline--fa fa-ellipsis-v icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"></path></svg></div>
+      <div class="moon-menu-text"></div>
+    </div>
+  </div>
+</div><script src="/js/injector.js"></script>
+</body>
+
+</html>
